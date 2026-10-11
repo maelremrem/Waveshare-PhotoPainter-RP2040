@@ -1,0 +1,120 @@
+name: Build firmware and publish Studio
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  web-tests:
+    name: Studio and format tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: JavaScript tests
+        run: npm test --prefix tools
+      - name: Firmware stream and image format tests
+        run: |
+          python tests/test_native_epd.py
+          python tests/test_jpeg_callbacks.py
+          python tests/test_jpeg_fallback.py
+          python tests/test_package_firmware.py
+
+  firmware:
+    name: Compile RP2040 UF2
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install PlatformIO
+        run: python -m pip install platformio
+      - name: Cache PlatformIO packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.platformio
+          key: platformio-${{ runner.os }}-${{ hashFiles('platformio.ini') }}
+      - name: Compile firmware
+        run: pio run -e photopainter_rp2040
+      - name: Package verified UF2 and build metadata
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_SHA: ${{ github.sha }}
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+        run: python scripts/package_firmware.py
+      - name: Upload UF2 and metadata
+        uses: actions/upload-artifact@v4
+        with:
+          name: PhotoPainter-RP2040-UF2
+          path: |
+            tools/firmware/PhotoPainter-RP2040-main.uf2
+            tools/firmware/build.json
+          if-no-files-found: error
+          retention-days: 30
+
+  pages:
+    name: Publish Studio + latest successful main build
+    needs: [web-tests, firmware]
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download compiled UF2
+        uses: actions/download-artifact@v4
+        with:
+          name: PhotoPainter-RP2040-UF2
+          path: tools/firmware
+      - uses: actions/configure-pages@v5
+      - name: Upload Studio Web and UF2
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: tools
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  release:
+    name: Publish stable firmware download
+    needs: [web-tests, firmware]
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: PhotoPainter-RP2040-UF2
+          path: dist
+      - name: Ensure release tag matches firmware version
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: python scripts/package_firmware.py --verify-tag "$RELEASE_TAG" --metadata dist/build.json
+      - name: Publish UF2 and SHA256 on GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          cp dist/PhotoPainter-RP2040-main.uf2 dist/PhotoPainter-RP2040.uf2
+          sha256sum dist/PhotoPainter-RP2040.uf2 > dist/PhotoPainter-RP2040.uf2.sha256
+          gh release view "$RELEASE_TAG" >/dev/null 2>&1 || gh release create "$RELEASE_TAG" --generate-notes --verify-tag
+          gh release upload "$RELEASE_TAG" dist/PhotoPainter-RP2040.uf2 dist/PhotoPainter-RP2040.uf2.sha256 --clobber

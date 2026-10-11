@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#101a1f" />
+  <meta name="description" content="PhotoPainter Studio : rendu ACeP 7 couleurs ou N&B, export natif EPD et configuration du cadre RP2040." />
+  <title>PhotoPainter Studio — ACeP 7 couleurs</title>
+  <link rel="stylesheet" href="./assets/style.css" />
+  <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg" />
+  <link rel="manifest" href="./manifest.webmanifest" />
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="PhotoPainter Studio – accueil">
+        <span class="brand-symbol" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+        <span><strong>PhotoPainter <em>Studio</em></strong><small>IMAGE LAB / ACeP 7 COLORS</small></span>
+      </a>
+      <nav class="page-tabs" aria-label="Navigation PhotoPainter"><button id="tabStudio" class="selected">Atelier photo</button><button id="tabFrame">Configurer le cadre</button><button id="tabFirmware">Firmware &amp; flash</button></nav>
+      <div class="top-actions">
+        <button id="settingsReset" class="btn btn-ghost small" title="Réinitialiser tous les réglages">Réinitialiser</button>
+        <button id="addImages" class="btn btn-secondary"><span class="iconplus">＋</span> Importer</button>
+        <button id="exportSelected" class="btn btn-primary" disabled>Exporter le EPD <span aria-hidden="true">↗</span></button>
+      </div>
+    </header>
+
+    <main class="workspace" id="workspace">
+      <aside class="library-panel">
+        <div class="panel-header"><div><h2>Bibliothèque</h2><p>Vos fichiers locaux</p></div><span class="counter" id="fileCount">0</span></div>
+        <div class="dropzone" id="dropzone" role="button" tabindex="0" aria-label="Importer des photos">
+          <div class="drop-icon">⇧</div><strong>Glissez vos photos ici</strong><span>ou cliquez pour parcourir</span><small>JPG · PNG · WEBP · BMP</small>
+        </div>
+        <div class="library-toolbar"><span>IMAGES</span><button id="clearLibrary" class="link-btn" disabled>Tout retirer</button></div>
+        <div class="file-list" id="fileList" aria-label="Images importées"><div class="empty-list">Vos images apparaîtront ici.</div></div>
+        <div class="library-footer">
+          <label class="field-label">Format d'export<select id="exportFormat"><option value="epd">EPD natif (recommandé)</option><option value="bmp">BMP 24 bits (compatibilité)</option></select></label>
+          <label class="toggle"><span>Inclure settings.conf dans le ZIP <small>Attention : remplace la configuration existante sur la carte SD</small></span><input id="includeFrameConf" type="checkbox" /></label>
+          <button id="exportAll" class="btn btn-secondary full" disabled>↓ Exporter tout en ZIP</button>
+          <p id="exportFormatHint">192 024 octets/image · aucun décodage sur le RP2040</p>
+        </div>
+      </aside>
+
+      <section class="main-panel">
+        <div class="stage-top">
+          <div class="stage-heading"><span class="eyebrow">PRÉVISUALISATION</span><h1>Le bon rendu, <em>avant l'écran.</em></h1><p id="selectedFilename">Importez une image pour commencer</p></div>
+          <div class="preview-actions"><button class="btn btn-outline small" id="compareBtn" disabled>◫ Comparer les algorithmes</button><button class="btn btn-outline small" id="savePreview" disabled>↓ Aperçu PNG</button></div>
+        </div>
+        <div class="stage-shell" id="stageShell">
+          <div class="stage-grid">
+            <div class="image-pane">
+              <div class="pane-top"><span>ORIGINAL</span><span id="sourceDimensions">—</span></div>
+              <div class="image-frame" id="originalFrame"><img id="originalImage" alt="Photo originale" hidden /><div class="frame-empty" id="originalEmpty"><span>▧</span> Aucune image</div></div>
+            </div>
+            <div class="image-pane">
+              <div class="pane-top"><span class="result-title" id="resultType">RÉSULTAT 7 COULEURS</span><span id="resultDimensions">800 × 480</span></div>
+              <div class="image-frame result-frame" id="resultFrame"><canvas id="resultCanvas" width="800" height="480" aria-label="Prévisualisation de l'image convertie"></canvas><div class="frame-empty" id="resultEmpty"><span>✦</span> Aperçu après conversion</div><div class="preview-loading" id="previewLoading" hidden><span class="spinner"></span>Conversion de l'aperçu…</div></div>
+            </div>
+          </div>
+          <div class="stage-bottom"><div class="legend" id="paletteLegend" aria-label="Palette ACeP"></div><span class="resolution-note">WAVESHARE PHOTO PAINTER · RP2040</span></div>
+        </div>
+        <div class="hint-row"><span class="hint-symbol">ⓘ</span><p>Le mode couleur utilise sept encres ; en N&B, seuls noir et blanc sont exportés. Le rendu réel dépend des pigments et de l’éclairage. Le format natif EPD évite totalement le décodage sur le firmware RP2040.</p></div>
+        <div class="progress-panel" id="progressPanel" hidden><div><strong id="progressTitle">Conversion en cours…</strong><span id="progressText">0 / 0</span></div><progress id="exportProgress" max="100" value="0"></progress></div>
+      </section>
+
+      <aside class="settings-panel">
+        <div class="panel-header"><div><h2>Réglages</h2><p>Affinage et export</p></div><button class="icon-btn" id="downloadConfig" title="Exporter mes réglages au format JSON" aria-label="Sauvegarder les réglages">↓</button></div>
+        <div class="settings-scroll">
+          <section class="controls-section">
+            <div class="section-title"><span class="section-number">01</span><h3>Préréglage</h3></div>
+            <select data-setting="preset" id="presetSelect" aria-label="Préréglage">
+              <option value="natural">Photo naturelle</option><option value="soft">Photo douce</option>
+              <option value="vivid">Couleurs & détails</option><option value="illustration">Illustration nette</option>
+              <option value="ordered">Tramage ordonné</option>
+              <optgroup label="Noir et blanc"><option value="bw-photo">N&B · Photo</option><option value="bw-soft">N&B · Doux</option><option value="bw-contrast">N&B · Contrasté</option><option value="bw-ink">N&B · Encre / seuil</option></optgroup><option value="custom">Personnalisé</option>
+            </select>
+            <label class="toggle"><span>Réglages propres à cette photo <small>Ils seront utilisés lors de l’export par lots</small></span><input type="checkbox" id="perImageSettings" /></label>
+          <div class="form-grid two"><label>Remplissage<select data-setting="fit"><option value="contain">Contenir (sans recadrage)</option><option value="cover">Couvrir (recadrage)</option></select></label><label>Orientation<select data-setting="orientation"><option value="0">0° paysage</option><option value="90">90° portrait</option><option value="180">180° paysage</option><option value="270">270° portrait</option></select></label></div>
+            <div class="range-control"><label for="zoom">Zoom / recadrage <output id="zoomValue"></output></label><input id="zoom" data-setting="zoom" type="range" min="1" max="3" step="0.05" /></div>
+            <div class="range-control"><label for="panX">Position horizontale <output id="panXValue"></output></label><input id="panX" data-setting="panX" type="range" min="-100" max="100" step="5" /></div>
+            <div class="range-control"><label for="panY">Position verticale <output id="panYValue"></output></label><input id="panY" data-setting="panY" type="range" min="-100" max="100" step="5" /></div>
+            <p class="setting-hint">Vous pouvez aussi glisser la prévisualisation avec la souris pour ajuster le cadrage.</p>
+            <label class="color-inline">Fond des marges <input type="color" data-setting="background" value="#ffffff" aria-label="Couleur du fond des marges" /></label>
+          </section>
+          <section class="controls-section">
+            <div class="section-title"><span class="section-number">02</span><h3>Couleurs et noir & blanc</h3></div>
+            <label class="field-label">Mode d'affichage
+              <select data-setting="monoMode" id="monoMode">
+                <option value="off">Sept couleurs ACeP</option>
+                <option value="photo">N&B · Photo (nuances tramées)</option>
+                <option value="soft">N&B · Doux (nuances tramées)</option>
+                <option value="contrast">N&B · Contrasté</option>
+                <option value="threshold">N&B · Noir/blanc pur (seuil)</option>
+              </select>
+            </label>
+            <p class="setting-hint" id="monoHint" hidden>Les gris sont simulés avec des pixels noirs et blancs.</p>
+            <div id="monoControls" hidden>
+              <div class="range-control"><label for="monoBlackPoint">Point noir <output id="monoBlackPointValue"></output></label><input id="monoBlackPoint" data-setting="monoBlackPoint" type="range" min="0" max="250" step="1" /></div>
+              <div class="range-control"><label for="monoWhitePoint">Point blanc <output id="monoWhitePointValue"></output></label><input id="monoWhitePoint" data-setting="monoWhitePoint" type="range" min="5" max="255" step="1" /></div>
+              <div class="range-control" id="monoThresholdControl" hidden><label for="monoThreshold">Seuil noir/blanc <output id="monoThresholdValue"></output></label><input id="monoThreshold" data-setting="monoThreshold" type="range" min="0" max="255" step="1" /></div>
+              <label class="toggle"><span>Inverser noir et blanc <small>Pour un effet négatif</small></span><input type="checkbox" data-setting="monoInvert" /></label>
+            </div>
+          </section>
+          <section class="controls-section">
+            <div class="section-title"><span class="section-number">03</span><h3>Dithering</h3></div>
+            <label class="field-label">Algorithme<select data-setting="algorithm" id="algorithmSelect"><optgroup label="Diffusion d'erreur"><option value="floyd">Floyd–Steinberg</option><option value="atkinson">Atkinson</option><option value="sierra-lite">Sierra Lite</option><option value="burkes">Burkes</option><option value="stucki">Stucki</option><option value="jjn">Jarvis–Judice–Ninke</option></optgroup><optgroup label="Tramage ordonné"><option value="bayer4">Bayer 4×4</option><option value="bayer8">Bayer 8×8</option><option value="bayer16">Bayer 16×16</option><option value="noise">Bruit réparti</option></optgroup><optgroup label="Sans tramage"><option value="none">Sans dithering</option></optgroup></select></label>
+            <label class="field-label">Correspondance des couleurs<select data-setting="distance"><option value="oklab">OKLab (perceptuel)</option><option value="weighted">RGB pondéré</option><option value="rgb">RGB classique</option></select></label>
+            <div class="range-control" data-range="strength"><label for="strength">Intensité du tramage <output id="strengthValue"></output></label><input id="strength" data-setting="strength" type="range" min="0" max="1" step="0.05" /></div>
+            <div class="range-control" data-range="grainPenalty"><label for="grainPenalty">Limiter le grain <output id="grainPenaltyValue"></output></label><input id="grainPenalty" data-setting="grainPenalty" type="range" min="0" max="0.6" step="0.02" /></div>
+            <label class="toggle"><span>Diffusion en serpentin <small>Évite les motifs directionnels</small></span><input type="checkbox" data-setting="serpentine" checked /></label>
+          </section>
+          <section class="controls-section">
+            <div class="section-title"><span class="section-number">04</span><h3>Luminosité & couleurs</h3></div>
+            <label class="toggle"><span>Niveaux automatiques <small>Équilibrage global</small></span><input type="checkbox" data-setting="autoLevels" /></label>
+            <div class="range-control"><label for="exposure">Exposition <output id="exposureValue"></output></label><input id="exposure" data-setting="exposure" type="range" min="-2" max="2" step="0.1" /></div>
+            <div class="range-control"><label for="gamma">Gamma <output id="gammaValue"></output></label><input id="gamma" data-setting="gamma" type="range" min="0.6" max="2" step="0.02" /></div>
+            <div class="range-control"><label for="contrast">Contraste <output id="contrastValue"></output></label><input id="contrast" data-setting="contrast" type="range" min="0.5" max="2" step="0.02" /></div>
+            <div class="range-control"><label for="shadows">Ombres <output id="shadowsValue"></output></label><input id="shadows" data-setting="shadows" type="range" min="-100" max="100" step="5" /></div>
+            <div class="range-control"><label for="highlights">Hautes lumières <output id="highlightsValue"></output></label><input id="highlights" data-setting="highlights" type="range" min="-100" max="100" step="5" /></div>
+            <div class="range-control"><label for="saturation">Saturation <output id="saturationValue"></output></label><input id="saturation" data-setting="saturation" type="range" min="0" max="2" step="0.05" /></div>
+            <div class="range-control"><label for="vibrance">Vibrance <output id="vibranceValue"></output></label><input id="vibrance" data-setting="vibrance" type="range" min="-100" max="100" step="5" /></div>
+            <div class="range-control"><label for="temperature">Température <output id="temperatureValue"></output></label><input id="temperature" data-setting="temperature" type="range" min="-100" max="100" step="5" /></div>
+            <div class="range-control"><label for="tint">Teinte vert / magenta <output id="tintValue"></output></label><input id="tint" data-setting="tint" type="range" min="-100" max="100" step="5" /></div>
+          </section>
+          <section class="controls-section">
+            <div class="section-title"><span class="section-number">05</span><h3>Finition</h3></div>
+            <div class="range-control"><label for="sharpen">Netteté <output id="sharpenValue"></output></label><input id="sharpen" data-setting="sharpen" type="range" min="0" max="2" step="0.05" /></div>
+            <div class="range-control"><label for="denoise">Réduction du bruit <output id="denoiseValue"></output></label><input id="denoise" data-setting="denoise" type="range" min="0" max="1" step="0.05" /></div>
+          </section>
+          <div class="settings-footer"><label class="link-btn config-import">Importer des réglages JSON<input type="file" id="importConfig" accept=".json,application/json" hidden /></label><span>Paramètres mémorisés localement</span></div>
+        </div>
+      </aside>
+    </main>
+    <section class="frame-page" id="framePage" hidden>
+      <div class="frame-intro"><div><span class="eyebrow">CONFIGURATION DU MATÉRIEL</span><h1>Paramètres du <em>cadre RP2040</em></h1><p>Générez <code>settings.conf</code> pour la racine de votre microSD. Les réglages sont validés et conservés localement.</p></div><div class="frame-intro-actions"><label class="btn btn-outline">Importer un .conf<input id="frameImport" type="file" accept=".conf,.ini,text/plain" hidden /></label><button class="btn btn-outline" id="frameReset">Réinitialiser</button><button class="btn btn-primary" id="frameDownload">↓ Télécharger settings.conf</button></div></div>
+      <div class="frame-columns"><div class="frame-fields">
+        <section class="frame-card"><h2>01 · Diaporama et orientation</h2>
+          <div class="frame-field-grid">
+            <label>Orientation<select data-frame-setting="orientation"><option value="0">0°</option><option value="90">90°</option><option value="180">180°</option><option value="270">270°</option></select></label>
+            <label>Intervalle entre images (minutes)<input data-frame-setting="refresh_minutes" type="number" min="1" max="10080" step="1" /></label>
+            <label>Cadrage BMP / JPEG<select data-frame-setting="image_fit"><option value="contain">Contenir</option><option value="cover">Couvrir</option></select></label>
+            <label>JPEG progressif<select data-frame-setting="progressive_jpeg"><option value="preview">Aperçu réduit</option><option value="reject">Refuser</option></select></label>
+            <label>Début de la pause nocturne<input data-frame-setting="quiet_hours_start" type="time" /></label>
+            <label>Fin de la pause nocturne<input data-frame-setting="quiet_hours_end" type="time" /></label>
+          </div>
+          <div class="frame-toggles"><label><input data-frame-setting="shuffle" type="checkbox" /> Mélanger les photos sans répétition dans le cycle</label><label><input data-frame-setting="single_image_auto_pause" type="checkbox" /> Suspendre les réveils si une seule photo</label><label><input data-frame-setting="usb_auto_next" type="checkbox" /> Défilement automatique aussi sur USB</label></div>
+          <p class="frame-note">AUTO-NEXT est un sélecteur matériel : en fonctionnement batterie, il autorise ou bloque le réveil RTC. Les horaires sont ceux du RTC, sans gestion automatique de fuseau horaire. Orientation sans effet sur les fichiers natifs EPD.</p>
+        </section>
+        <section class="frame-card"><h2>02 · Énergie, cache et batterie</h2>
+          <div class="frame-field-grid">
+            <label>Seuil batterie faible (V)<input data-frame-setting="low_battery_v" type="number" min="3.2" max="3.8" step="0.05" /></label>
+            <label>Seuil critique (V)<input data-frame-setting="critical_cutoff_v" type="number" min="3.0" max="3.4" step="0.05" /></label>
+            <label>Écriture cache au-dessus de (V)<input data-frame-setting="cache_write_min_v" type="number" min="3.3" max="4.2" step="0.05" /></label>
+            <label>Calibrage tension (×)<input data-frame-setting="battery_calibration" type="number" min="0.85" max="1.15" step="0.001" /></label>
+          </div>
+          <div class="frame-toggles"><label><input data-frame-setting="cache_enabled" type="checkbox" /> Cache des JPEG et BMP</label><label><input data-frame-setting="skip_unchanged" type="checkbox" /> Éviter un rafraîchissement identique</label><label><input data-frame-setting="activity_led" type="checkbox" /> LED ACT pendant le travail</label></div>
+          <p class="frame-note">L'export EPD ne nécessite pas de cache. Mesurez la tension avec un multimètre avant de modifier le coefficient de calibrage.</p>
+        </section>
+        <section class="frame-card"><h2>03 · Diagnostic USB <small>Web Serial · Chrome/Chromium</small></h2>
+          <div class="frame-intro-actions"><button class="btn btn-outline" id="serialConnect">Connecter le RP2040</button><button class="btn btn-outline" id="serialStatus">STATUS</button><button class="btn btn-outline" id="serialNext">NEXT</button><button class="btn btn-outline" id="serialSyncTime">Synchroniser l'horloge</button></div>
+          <div class="serial-command"><input id="serialCommand" placeholder="HELP, TIME, LIST…" /><button class="btn btn-secondary" id="serialSend" disabled>Envoyer</button></div><pre id="serialLog" class="serial-log" aria-live="polite"></pre>
+          <p class="frame-note">Connexion uniquement sur HTTPS ou localhost, avec votre autorisation. Le transfert d'images sur la microSD n'est pas encore supporté par le protocole série.</p>
+        </section>
+      </div><aside class="frame-card frame-output"><h2>Fichier settings.conf</h2><p>Prévisualisation exacte du fichier à déposer à la racine de la carte SD.</p><textarea id="frameConfText" readonly spellcheck="false" rows="24"></textarea><div id="frameValidation" class="frame-validation" role="status"></div><p class="frame-note">Les fichiers .epd exportés ont déjà leur rotation et palette intégrées. Une seule configuration s'applique à tout le cadre.</p></aside></div>
+    </section>
+    <section class="firmware-page" id="firmwarePage" hidden>
+      <div class="frame-intro">
+        <div><span class="eyebrow">WAVESHARE PHOTO PAINTER · RP2040</span>
+          <h1>Firmware <em>&amp; flash UF2</em></h1>
+          <p>Récupérez le firmware compilé automatiquement par GitHub Actions, puis installez-le sans outil spécialisé.</p>
+        </div>
+        <button class="btn btn-outline" id="fwRefresh" type="button">↻ Actualiser les versions</button>
+      </div>
+      <div class="firmware-grid">
+        <article class="frame-card firmware-card">
+          <span class="eyebrow">01 · VERSION CONSEILLÉE</span>
+          <h2>Dernière version stable</h2>
+          <p id="fwReleaseStatus" aria-live="polite">Recherche de la dernière release…</p>
+          <a class="btn btn-primary" id="fwStableDownload" href="#" hidden>↓ Télécharger le firmware stable</a>
+          <p class="frame-note">Fichier <code>PhotoPainter-RP2040.uf2</code> publié avec une release GitHub portant un tag <code>vX.Y.Z</code>.</p>
+          <a class="firmware-link" id="fwReleasesLink" href="#" target="_blank" rel="noopener noreferrer" hidden>Toutes les releases GitHub ↗</a>
+        </article>
+        <article class="frame-card firmware-card">
+          <span class="eyebrow">02 · DERNIER BUILD DE MAIN</span>
+          <h2>Firmware de développement</h2>
+          <p id="fwBuildStatus" aria-live="polite">Recherche du dernier build…</p>
+          <a class="btn btn-secondary" id="fwDevDownload" href="#" hidden>↓ Télécharger le firmware (main)</a>
+          <dl class="firmware-meta"><div><dt>Commit</dt><dd id="fwBuildCommit">—</dd></div><div><dt>SHA-256</dt><dd id="fwBuildChecksum">—</dd></div></dl>
+          <p class="frame-note">Reconstruit sur chaque push <code>main</code> réussi, publié directement sur ce site. Ce n'est pas nécessairement une version stable.</p>
+          <a class="firmware-link" id="fwActionsLink" href="#" target="_blank" rel="noopener noreferrer" hidden>Voir les compilations GitHub ↗</a>
+        </article>
+      </div>
+      <div class="firmware-grid firmware-bottom">
+        <article class="frame-card firmware-card firmware-guide">
+          <span class="eyebrow">03 · INSTALLATION USB</span>
+          <h2>Flasher le cadre en mode BOOTSEL</h2>
+          <ol class="firmware-steps">
+            <li><strong>Téléchargez le fichier <code>.uf2</code></strong> ci-dessus. Ne le décompressez pas et ne le copiez pas sur la carte microSD.</li>
+            <li><strong>Connectez le cadre par un câble USB de données.</strong> Laissez la carte microSD en place ; son contenu sera conservé.</li>
+            <li><strong>Maintenez BOOT, appuyez brièvement sur RUN, puis relâchez BOOT.</strong> Si besoin, débranchez l’USB, maintenez BOOT, rebranchez l’USB puis relâchez BOOT.</li>
+            <li><strong>Ouvrez le lecteur <code>RPI-RP2</code></strong> qui apparaît sur votre ordinateur.</li>
+            <li><strong>Glissez le fichier <code>.uf2</code> sur <code>RPI-RP2</code>.</strong> Le lecteur disparaît et le RP2040 redémarre automatiquement.</li>
+            <li><strong>Vérifiez le firmware.</strong> Dans Studio → Configurer le cadre → USB, connectez le port série et envoyez <code>STATUS</code> à 115200 bauds.</li>
+          </ol>
+          <p class="firmware-warning"><strong>Compatibilité :</strong> uniquement la carte <strong>Waveshare PhotoPainter RP2040 (F) 7,3 pouces, 800 × 480, 7 couleurs</strong>. Ne pas utiliser cet UF2 sur les versions RP2350 ou ESP32-S3. L'image E Ink peut rester identique après le flash : c'est normal.</p>
+        </article>
+        <aside class="frame-card firmware-card firmware-manual">
+          <span class="eyebrow">04 · EN CAS DE PROBLÈME</span>
+          <h2>Compilation locale / Fedora</h2>
+          <p>Depuis la racine du dépôt ouvert avec PlatformIO :</p>
+          <pre class="firmware-code">pio run -e photopainter_rp2040</pre>
+          <p>Le firmware est généré ici :</p>
+          <pre class="firmware-code">.pio/build/photopainter_rp2040/firmware.uf2</pre>
+          <p>Si <code>RPI-RP2</code> est monté automatiquement sous Fedora :</p>
+          <pre class="firmware-code">cp .pio/build/photopainter_rp2040/firmware.uf2 \
+  "/run/media/$USER/RPI-RP2/"</pre>
+          <details><summary>Je ne vois pas le lecteur RPI-RP2</summary><p>Vérifiez le câble USB (certains ne transmettent que l'alimentation), le port et l'ordre BOOT/RUN. Fermez tout moniteur série ouvert. Vérifiez avec <code>lsblk -f</code> que le lecteur a été monté.</p></details>
+          <details><summary>Upload and Monitor fonctionne mal</summary><p>Si PlatformIO affiche <code>No new RPxxxx device found yet</code>, essayez le flash manuel UF2. Un message <code>Verifying Flash: OK</code> indique que l'écriture a bien été vérifiée.</p></details>
+          <details><summary>Le site peut-il flasher directement ?</summary><p>Non : le navigateur ne copie pas automatiquement le firmware sur le volume BOOTSEL. Téléchargez l'UF2, puis utilisez le gestionnaire de fichiers. Web Serial sert uniquement au diagnostic et aux commandes du firmware déjà installé.</p></details>
+        </aside>
+      </div>
+    </section>
+    <footer class="footer"><span>PHOTO PAINTER STUDIO · <a href="https://github.com/waveshareteam/PhotoPainter" target="_blank" rel="noopener noreferrer">Waveshare original</a> · Apache-2.0</span><span>Export EPD/BMP · 7 couleurs ou N&B · prêt pour <code>/pic</code></span><span id="statusMessage" role="status" aria-live="polite">Prêt</span></footer>
+  </div>
+  <input id="fileInput" type="file" multiple accept="image/jpeg,image/png,image/webp,image/bmp,.jpg,.jpeg,.png,.webp,.bmp" hidden />
+  <dialog id="compareDialog" class="compare-dialog"><div class="dialog-head"><div><span class="eyebrow">COMPARAISON</span><h2>Choisir le rendu</h2></div><button id="closeCompare" class="btn btn-outline small">Fermer ×</button></div><p>Quatre rendus sur la même image. Cliquez sur une vignette pour choisir la méthode.</p><div id="compareGrid" class="compare-grid"></div></dialog>
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>

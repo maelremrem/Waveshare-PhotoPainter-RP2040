@@ -1,0 +1,10 @@
+.pio/
+.vscode/
+.idea/
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+.env
+.DS_Store
+*.uf2
