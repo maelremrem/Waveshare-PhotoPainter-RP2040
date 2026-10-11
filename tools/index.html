@@ -4,8 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#101a1f" />
-  <meta name="description" content="PhotoPainter Studio : rendu ACeP 7 couleurs ou N&B, export natif EPD et configuration du cadre RP2040." />
-  <title>PhotoPainter Studio — ACeP 7 couleurs</title>
+  <meta name="description" content="PhotoPainter Studio : rendu ACeP 7 couleurs ou N&B, export natif EPD et configuration du cadre RP2040."  data-i18n-content="PhotoPainter Studio : rendu ACeP 7 couleurs ou N&amp;B, export natif EPD et configuration du cadre RP2040."/>
+  <title data-i18n-text="{&quot;0&quot;: &quot;PhotoPainter Studio — ACeP 7 couleurs&quot;}">PhotoPainter Studio — ACeP 7 couleurs</title>
   <link rel="stylesheet" href="./assets/style.css" />
   <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg" />
   <link rel="manifest" href="./manifest.webmanifest" />
@@ -13,217 +13,218 @@
 <body>
   <div class="app">
     <header class="topbar">
-      <a class="brand" href="./" aria-label="PhotoPainter Studio – accueil">
+      <a class="brand" href="./" aria-label="PhotoPainter Studio – accueil" data-i18n-aria-label="PhotoPainter Studio – accueil">
         <span class="brand-symbol" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
-        <span><strong>PhotoPainter <em>Studio</em></strong><small>IMAGE LAB / ACeP 7 COLORS</small></span>
+        <span><strong data-i18n-text="{&quot;0&quot;: &quot;PhotoPainter&quot;}">PhotoPainter <em data-i18n-text="{&quot;0&quot;: &quot;Studio&quot;}">Studio</em></strong><small data-i18n-text="{&quot;0&quot;: &quot;IMAGE LAB / ACeP 7 COLORS&quot;}">IMAGE LAB / ACeP 7 COLORS</small></span>
       </a>
-      <nav class="page-tabs" aria-label="Navigation PhotoPainter"><button id="tabStudio" class="selected">Atelier photo</button><button id="tabFrame">Configurer le cadre</button><button id="tabFirmware">Firmware &amp; flash</button></nav>
+      <nav class="page-tabs" aria-label="Navigation PhotoPainter" data-i18n-aria-label="Navigation PhotoPainter"><button id="tabStudio" class="selected" data-i18n-text="{&quot;0&quot;: &quot;Atelier photo&quot;}">Atelier photo</button><button id="tabFrame" data-i18n-text="{&quot;0&quot;: &quot;Configurer le cadre&quot;}">Configurer le cadre</button><button id="tabFirmware" data-i18n-text="{&quot;0&quot;: &quot;Firmware &amp; flash&quot;}">Firmware &amp; flash</button></nav>
+      <label class="language-control"><span data-i18n-text='{"0":"Langue"}'>Langue</span><select id="languageSelect" data-i18n-aria-label="Langue" aria-label="Langue"><option value="fr">FR</option><option value="en">EN</option></select></label>
       <div class="top-actions">
-        <button id="settingsReset" class="btn btn-ghost small" title="Réinitialiser tous les réglages">Réinitialiser</button>
-        <button id="addImages" class="btn btn-secondary"><span class="iconplus">＋</span> Importer</button>
-        <button id="exportSelected" class="btn btn-primary" disabled>Exporter le EPD <span aria-hidden="true">↗</span></button>
+        <button id="settingsReset" class="btn btn-ghost small" title="Réinitialiser tous les réglages" data-i18n-text="{&quot;0&quot;: &quot;Réinitialiser&quot;}" data-i18n-title="Réinitialiser tous les réglages">Réinitialiser</button>
+        <button id="addImages" class="btn btn-secondary" data-i18n-text="{&quot;1&quot;: &quot;Importer&quot;}"><span class="iconplus">＋</span> Importer</button>
+        <button id="exportSelected" class="btn btn-primary" disabled data-i18n-text="{&quot;0&quot;: &quot;Exporter le EPD&quot;}">Exporter le EPD <span aria-hidden="true">↗</span></button>
       </div>
     </header>
 
     <main class="workspace" id="workspace">
       <aside class="library-panel">
-        <div class="panel-header"><div><h2>Bibliothèque</h2><p>Vos fichiers locaux</p></div><span class="counter" id="fileCount">0</span></div>
-        <div class="dropzone" id="dropzone" role="button" tabindex="0" aria-label="Importer des photos">
-          <div class="drop-icon">⇧</div><strong>Glissez vos photos ici</strong><span>ou cliquez pour parcourir</span><small>JPG · PNG · WEBP · BMP</small>
+        <div class="panel-header"><div><h2 data-i18n-text="{&quot;0&quot;: &quot;Bibliothèque&quot;}">Bibliothèque</h2><p data-i18n-text="{&quot;0&quot;: &quot;Vos fichiers locaux&quot;}">Vos fichiers locaux</p></div><span class="counter" id="fileCount">0</span></div>
+        <div class="dropzone" id="dropzone" role="button" tabindex="0" aria-label="Importer des photos" data-i18n-aria-label="Importer des photos">
+          <div class="drop-icon">⇧</div><strong data-i18n-text="{&quot;0&quot;: &quot;Glissez vos photos ici&quot;}">Glissez vos photos ici</strong><span data-i18n-text="{&quot;0&quot;: &quot;ou cliquez pour parcourir&quot;}">ou cliquez pour parcourir</span><small data-i18n-text="{&quot;0&quot;: &quot;JPG · PNG · WEBP · BMP&quot;}">JPG · PNG · WEBP · BMP</small>
         </div>
-        <div class="library-toolbar"><span>IMAGES</span><button id="clearLibrary" class="link-btn" disabled>Tout retirer</button></div>
-        <div class="file-list" id="fileList" aria-label="Images importées"><div class="empty-list">Vos images apparaîtront ici.</div></div>
+        <div class="library-toolbar"><span data-i18n-text="{&quot;0&quot;: &quot;IMAGES&quot;}">IMAGES</span><button id="clearLibrary" class="link-btn" disabled data-i18n-text="{&quot;0&quot;: &quot;Tout retirer&quot;}">Tout retirer</button></div>
+        <div class="file-list" id="fileList" aria-label="Images importées" data-i18n-aria-label="Images importées"><div class="empty-list" data-i18n-text="{&quot;0&quot;: &quot;Vos images apparaîtront ici.&quot;}">Vos images apparaîtront ici.</div></div>
         <div class="library-footer">
-          <label class="field-label">Format d'export<select id="exportFormat"><option value="epd">EPD natif (recommandé)</option><option value="bmp">BMP 24 bits (compatibilité)</option></select></label>
-          <label class="toggle"><span>Inclure settings.conf dans le ZIP <small>Attention : remplace la configuration existante sur la carte SD</small></span><input id="includeFrameConf" type="checkbox" /></label>
-          <button id="exportAll" class="btn btn-secondary full" disabled>↓ Exporter tout en ZIP</button>
-          <p id="exportFormatHint">192 024 octets/image · aucun décodage sur le RP2040</p>
+          <label class="field-label" data-i18n-text="{&quot;0&quot;: &quot;Format d&#x27;export&quot;}">Format d'export<select id="exportFormat"><option value="epd" data-i18n-text="{&quot;0&quot;: &quot;EPD natif (recommandé)&quot;}">EPD natif (recommandé)</option><option value="bmp" data-i18n-text="{&quot;0&quot;: &quot;BMP 24 bits (compatibilité)&quot;}">BMP 24 bits (compatibilité)</option></select></label>
+          <label class="toggle"><span data-i18n-text="{&quot;0&quot;: &quot;Inclure settings.conf dans le ZIP&quot;}">Inclure settings.conf dans le ZIP <small data-i18n-text="{&quot;0&quot;: &quot;Attention : remplace la configuration existante sur la carte SD&quot;}">Attention : remplace la configuration existante sur la carte SD</small></span><input id="includeFrameConf" type="checkbox" /></label>
+          <button id="exportAll" class="btn btn-secondary full" disabled data-i18n-text="{&quot;0&quot;: &quot;↓ Exporter tout en ZIP&quot;}">↓ Exporter tout en ZIP</button>
+          <p id="exportFormatHint" data-i18n-text="{&quot;0&quot;: &quot;192 024 octets/image · aucun décodage sur le RP2040&quot;}">192 024 octets/image · aucun décodage sur le RP2040</p>
         </div>
       </aside>
 
       <section class="main-panel">
         <div class="stage-top">
-          <div class="stage-heading"><span class="eyebrow">PRÉVISUALISATION</span><h1>Le bon rendu, <em>avant l'écran.</em></h1><p id="selectedFilename">Importez une image pour commencer</p></div>
-          <div class="preview-actions"><button class="btn btn-outline small" id="compareBtn" disabled>◫ Comparer les algorithmes</button><button class="btn btn-outline small" id="savePreview" disabled>↓ Aperçu PNG</button></div>
+          <div class="stage-heading"><span class="eyebrow" data-i18n-text="{&quot;0&quot;: &quot;PRÉVISUALISATION&quot;}">PRÉVISUALISATION</span><h1 data-i18n-text="{&quot;0&quot;: &quot;Le bon rendu,&quot;}">Le bon rendu, <em data-i18n-text="{&quot;0&quot;: &quot;avant l&#x27;écran.&quot;}">avant l'écran.</em></h1><p id="selectedFilename" data-i18n-text="{&quot;0&quot;: &quot;Importez une image pour commencer&quot;}">Importez une image pour commencer</p></div>
+          <div class="preview-actions"><button class="btn btn-outline small" id="compareBtn" disabled data-i18n-text="{&quot;0&quot;: &quot;◫ Comparer les algorithmes&quot;}">◫ Comparer les algorithmes</button><button class="btn btn-outline small" id="savePreview" disabled data-i18n-text="{&quot;0&quot;: &quot;↓ Aperçu PNG&quot;}">↓ Aperçu PNG</button></div>
         </div>
         <div class="stage-shell" id="stageShell">
           <div class="stage-grid">
             <div class="image-pane">
-              <div class="pane-top"><span>ORIGINAL</span><span id="sourceDimensions">—</span></div>
-              <div class="image-frame" id="originalFrame"><img id="originalImage" alt="Photo originale" hidden /><div class="frame-empty" id="originalEmpty"><span>▧</span> Aucune image</div></div>
+              <div class="pane-top"><span data-i18n-text="{&quot;0&quot;: &quot;ORIGINAL&quot;}">ORIGINAL</span><span id="sourceDimensions">—</span></div>
+              <div class="image-frame" id="originalFrame"><img id="originalImage" alt="Photo originale" hidden  data-i18n-alt="Photo originale"/><div class="frame-empty" id="originalEmpty" data-i18n-text="{&quot;1&quot;: &quot;Aucune image&quot;}"><span>▧</span> Aucune image</div></div>
             </div>
             <div class="image-pane">
-              <div class="pane-top"><span class="result-title" id="resultType">RÉSULTAT 7 COULEURS</span><span id="resultDimensions">800 × 480</span></div>
-              <div class="image-frame result-frame" id="resultFrame"><canvas id="resultCanvas" width="800" height="480" aria-label="Prévisualisation de l'image convertie"></canvas><div class="frame-empty" id="resultEmpty"><span>✦</span> Aperçu après conversion</div><div class="preview-loading" id="previewLoading" hidden><span class="spinner"></span>Conversion de l'aperçu…</div></div>
+              <div class="pane-top"><span class="result-title" id="resultType" data-i18n-text="{&quot;0&quot;: &quot;RÉSULTAT 7 COULEURS&quot;}">RÉSULTAT 7 COULEURS</span><span id="resultDimensions" data-i18n-text="{&quot;0&quot;: &quot;800 × 480&quot;}">800 × 480</span></div>
+              <div class="image-frame result-frame" id="resultFrame"><canvas id="resultCanvas" width="800" height="480" aria-label="Prévisualisation de l'image convertie" data-i18n-aria-label="Prévisualisation de l&#x27;image convertie"></canvas><div class="frame-empty" id="resultEmpty" data-i18n-text="{&quot;1&quot;: &quot;Aperçu après conversion&quot;}"><span>✦</span> Aperçu après conversion</div><div class="preview-loading" id="previewLoading" hidden data-i18n-text="{&quot;1&quot;: &quot;Conversion de l&#x27;aperçu…&quot;}"><span class="spinner"></span>Conversion de l'aperçu…</div></div>
             </div>
           </div>
-          <div class="stage-bottom"><div class="legend" id="paletteLegend" aria-label="Palette ACeP"></div><span class="resolution-note">WAVESHARE PHOTO PAINTER · RP2040</span></div>
+          <div class="stage-bottom"><div class="legend" id="paletteLegend" aria-label="Palette ACeP" data-i18n-aria-label="Palette ACeP"></div><span class="resolution-note" data-i18n-text="{&quot;0&quot;: &quot;WAVESHARE PHOTO PAINTER · RP2040&quot;}">WAVESHARE PHOTO PAINTER · RP2040</span></div>
         </div>
-        <div class="hint-row"><span class="hint-symbol">ⓘ</span><p>Le mode couleur utilise sept encres ; en N&B, seuls noir et blanc sont exportés. Le rendu réel dépend des pigments et de l’éclairage. Le format natif EPD évite totalement le décodage sur le firmware RP2040.</p></div>
-        <div class="progress-panel" id="progressPanel" hidden><div><strong id="progressTitle">Conversion en cours…</strong><span id="progressText">0 / 0</span></div><progress id="exportProgress" max="100" value="0"></progress></div>
+        <div class="hint-row"><span class="hint-symbol">ⓘ</span><p data-i18n-text="{&quot;0&quot;: &quot;Le mode couleur utilise sept encres ; en N&amp;B, seuls noir et blanc sont exportés. Le rendu réel dépend des pigments et de l’éclairage. Le format natif EPD évite totalement le décodage sur le firmware RP2040.&quot;}">Le mode couleur utilise sept encres ; en N&B, seuls noir et blanc sont exportés. Le rendu réel dépend des pigments et de l’éclairage. Le format natif EPD évite totalement le décodage sur le firmware RP2040.</p></div>
+        <div class="progress-panel" id="progressPanel" hidden><div><strong id="progressTitle" data-i18n-text="{&quot;0&quot;: &quot;Conversion en cours…&quot;}">Conversion en cours…</strong><span id="progressText">0 / 0</span></div><progress id="exportProgress" max="100" value="0"></progress></div>
       </section>
 
       <aside class="settings-panel">
-        <div class="panel-header"><div><h2>Réglages</h2><p>Affinage et export</p></div><button class="icon-btn" id="downloadConfig" title="Exporter mes réglages au format JSON" aria-label="Sauvegarder les réglages">↓</button></div>
+        <div class="panel-header"><div><h2 data-i18n-text="{&quot;0&quot;: &quot;Réglages&quot;}">Réglages</h2><p data-i18n-text="{&quot;0&quot;: &quot;Affinage et export&quot;}">Affinage et export</p></div><button class="icon-btn" id="downloadConfig" title="Exporter mes réglages au format JSON" aria-label="Sauvegarder les réglages" data-i18n-title="Exporter mes réglages au format JSON" data-i18n-aria-label="Sauvegarder les réglages">↓</button></div>
         <div class="settings-scroll">
           <section class="controls-section">
-            <div class="section-title"><span class="section-number">01</span><h3>Préréglage</h3></div>
-            <select data-setting="preset" id="presetSelect" aria-label="Préréglage">
-              <option value="natural">Photo naturelle</option><option value="soft">Photo douce</option>
-              <option value="vivid">Couleurs & détails</option><option value="illustration">Illustration nette</option>
-              <option value="ordered">Tramage ordonné</option>
-              <optgroup label="Noir et blanc"><option value="bw-photo">N&B · Photo</option><option value="bw-soft">N&B · Doux</option><option value="bw-contrast">N&B · Contrasté</option><option value="bw-ink">N&B · Encre / seuil</option></optgroup><option value="custom">Personnalisé</option>
+            <div class="section-title"><span class="section-number">01</span><h3 data-i18n-text="{&quot;0&quot;: &quot;Préréglage&quot;}">Préréglage</h3></div>
+            <select data-setting="preset" id="presetSelect" aria-label="Préréglage" data-i18n-aria-label="Préréglage">
+              <option value="natural" data-i18n-text="{&quot;0&quot;: &quot;Photo naturelle&quot;}">Photo naturelle</option><option value="soft" data-i18n-text="{&quot;0&quot;: &quot;Photo douce&quot;}">Photo douce</option>
+              <option value="vivid" data-i18n-text="{&quot;0&quot;: &quot;Couleurs &amp; détails&quot;}">Couleurs & détails</option><option value="illustration" data-i18n-text="{&quot;0&quot;: &quot;Illustration nette&quot;}">Illustration nette</option>
+              <option value="ordered" data-i18n-text="{&quot;0&quot;: &quot;Tramage ordonné&quot;}">Tramage ordonné</option>
+              <optgroup label="Noir et blanc" data-i18n-label="Noir et blanc"><option value="bw-photo" data-i18n-text="{&quot;0&quot;: &quot;N&amp;B · Photo&quot;}">N&B · Photo</option><option value="bw-soft" data-i18n-text="{&quot;0&quot;: &quot;N&amp;B · Doux&quot;}">N&B · Doux</option><option value="bw-contrast" data-i18n-text="{&quot;0&quot;: &quot;N&amp;B · Contrasté&quot;}">N&B · Contrasté</option><option value="bw-ink" data-i18n-text="{&quot;0&quot;: &quot;N&amp;B · Encre / seuil&quot;}">N&B · Encre / seuil</option></optgroup><option value="custom" data-i18n-text="{&quot;0&quot;: &quot;Personnalisé&quot;}">Personnalisé</option>
             </select>
-            <label class="toggle"><span>Réglages propres à cette photo <small>Ils seront utilisés lors de l’export par lots</small></span><input type="checkbox" id="perImageSettings" /></label>
-          <div class="form-grid two"><label>Remplissage<select data-setting="fit"><option value="contain">Contenir (sans recadrage)</option><option value="cover">Couvrir (recadrage)</option></select></label><label>Orientation<select data-setting="orientation"><option value="0">0° paysage</option><option value="90">90° portrait</option><option value="180">180° paysage</option><option value="270">270° portrait</option></select></label></div>
-            <div class="range-control"><label for="zoom">Zoom / recadrage <output id="zoomValue"></output></label><input id="zoom" data-setting="zoom" type="range" min="1" max="3" step="0.05" /></div>
-            <div class="range-control"><label for="panX">Position horizontale <output id="panXValue"></output></label><input id="panX" data-setting="panX" type="range" min="-100" max="100" step="5" /></div>
-            <div class="range-control"><label for="panY">Position verticale <output id="panYValue"></output></label><input id="panY" data-setting="panY" type="range" min="-100" max="100" step="5" /></div>
-            <p class="setting-hint">Vous pouvez aussi glisser la prévisualisation avec la souris pour ajuster le cadrage.</p>
-            <label class="color-inline">Fond des marges <input type="color" data-setting="background" value="#ffffff" aria-label="Couleur du fond des marges" /></label>
+            <label class="toggle"><span data-i18n-text="{&quot;0&quot;: &quot;Réglages propres à cette photo&quot;}">Réglages propres à cette photo <small data-i18n-text="{&quot;0&quot;: &quot;Ils seront utilisés lors de l’export par lots&quot;}">Ils seront utilisés lors de l’export par lots</small></span><input type="checkbox" id="perImageSettings" /></label>
+          <div class="form-grid two"><label data-i18n-text="{&quot;0&quot;: &quot;Remplissage&quot;}">Remplissage<select data-setting="fit"><option value="contain" data-i18n-text="{&quot;0&quot;: &quot;Contenir (sans recadrage)&quot;}">Contenir (sans recadrage)</option><option value="cover" data-i18n-text="{&quot;0&quot;: &quot;Couvrir (recadrage)&quot;}">Couvrir (recadrage)</option></select></label><label data-i18n-text="{&quot;0&quot;: &quot;Orientation&quot;}">Orientation<select data-setting="orientation"><option value="0" data-i18n-text="{&quot;0&quot;: &quot;0° paysage&quot;}">0° paysage</option><option value="90" data-i18n-text="{&quot;0&quot;: &quot;90° portrait&quot;}">90° portrait</option><option value="180" data-i18n-text="{&quot;0&quot;: &quot;180° paysage&quot;}">180° paysage</option><option value="270" data-i18n-text="{&quot;0&quot;: &quot;270° portrait&quot;}">270° portrait</option></select></label></div>
+            <div class="range-control"><label for="zoom" data-i18n-text="{&quot;0&quot;: &quot;Zoom / recadrage&quot;}">Zoom / recadrage <output id="zoomValue"></output></label><input id="zoom" data-setting="zoom" type="range" min="1" max="3" step="0.05" /></div>
+            <div class="range-control"><label for="panX" data-i18n-text="{&quot;0&quot;: &quot;Position horizontale&quot;}">Position horizontale <output id="panXValue"></output></label><input id="panX" data-setting="panX" type="range" min="-100" max="100" step="5" /></div>
+            <div class="range-control"><label for="panY" data-i18n-text="{&quot;0&quot;: &quot;Position verticale&quot;}">Position verticale <output id="panYValue"></output></label><input id="panY" data-setting="panY" type="range" min="-100" max="100" step="5" /></div>
+            <p class="setting-hint" data-i18n-text="{&quot;0&quot;: &quot;Vous pouvez aussi glisser la prévisualisation avec la souris pour ajuster le cadrage.&quot;}">Vous pouvez aussi glisser la prévisualisation avec la souris pour ajuster le cadrage.</p>
+            <label class="color-inline" data-i18n-text="{&quot;0&quot;: &quot;Fond des marges&quot;}">Fond des marges <input type="color" data-setting="background" value="#ffffff" aria-label="Couleur du fond des marges"  data-i18n-aria-label="Couleur du fond des marges"/></label>
           </section>
           <section class="controls-section">
-            <div class="section-title"><span class="section-number">02</span><h3>Couleurs et noir & blanc</h3></div>
-            <label class="field-label">Mode d'affichage
+            <div class="section-title"><span class="section-number">02</span><h3 data-i18n-text="{&quot;0&quot;: &quot;Couleurs et noir &amp; blanc&quot;}">Couleurs et noir & blanc</h3></div>
+            <label class="field-label" data-i18n-text="{&quot;0&quot;: &quot;Mode d&#x27;affichage&quot;}">Mode d'affichage
               <select data-setting="monoMode" id="monoMode">
-                <option value="off">Sept couleurs ACeP</option>
-                <option value="photo">N&B · Photo (nuances tramées)</option>
-                <option value="soft">N&B · Doux (nuances tramées)</option>
-                <option value="contrast">N&B · Contrasté</option>
-                <option value="threshold">N&B · Noir/blanc pur (seuil)</option>
+                <option value="off" data-i18n-text="{&quot;0&quot;: &quot;Sept couleurs ACeP&quot;}">Sept couleurs ACeP</option>
+                <option value="photo" data-i18n-text="{&quot;0&quot;: &quot;N&amp;B · Photo (nuances tramées)&quot;}">N&B · Photo (nuances tramées)</option>
+                <option value="soft" data-i18n-text="{&quot;0&quot;: &quot;N&amp;B · Doux (nuances tramées)&quot;}">N&B · Doux (nuances tramées)</option>
+                <option value="contrast" data-i18n-text="{&quot;0&quot;: &quot;N&amp;B · Contrasté&quot;}">N&B · Contrasté</option>
+                <option value="threshold" data-i18n-text="{&quot;0&quot;: &quot;N&amp;B · Noir/blanc pur (seuil)&quot;}">N&B · Noir/blanc pur (seuil)</option>
               </select>
             </label>
-            <p class="setting-hint" id="monoHint" hidden>Les gris sont simulés avec des pixels noirs et blancs.</p>
+            <p class="setting-hint" id="monoHint" hidden data-i18n-text="{&quot;0&quot;: &quot;Les gris sont simulés avec des pixels noirs et blancs.&quot;}">Les gris sont simulés avec des pixels noirs et blancs.</p>
             <div id="monoControls" hidden>
-              <div class="range-control"><label for="monoBlackPoint">Point noir <output id="monoBlackPointValue"></output></label><input id="monoBlackPoint" data-setting="monoBlackPoint" type="range" min="0" max="250" step="1" /></div>
-              <div class="range-control"><label for="monoWhitePoint">Point blanc <output id="monoWhitePointValue"></output></label><input id="monoWhitePoint" data-setting="monoWhitePoint" type="range" min="5" max="255" step="1" /></div>
-              <div class="range-control" id="monoThresholdControl" hidden><label for="monoThreshold">Seuil noir/blanc <output id="monoThresholdValue"></output></label><input id="monoThreshold" data-setting="monoThreshold" type="range" min="0" max="255" step="1" /></div>
-              <label class="toggle"><span>Inverser noir et blanc <small>Pour un effet négatif</small></span><input type="checkbox" data-setting="monoInvert" /></label>
+              <div class="range-control"><label for="monoBlackPoint" data-i18n-text="{&quot;0&quot;: &quot;Point noir&quot;}">Point noir <output id="monoBlackPointValue"></output></label><input id="monoBlackPoint" data-setting="monoBlackPoint" type="range" min="0" max="250" step="1" /></div>
+              <div class="range-control"><label for="monoWhitePoint" data-i18n-text="{&quot;0&quot;: &quot;Point blanc&quot;}">Point blanc <output id="monoWhitePointValue"></output></label><input id="monoWhitePoint" data-setting="monoWhitePoint" type="range" min="5" max="255" step="1" /></div>
+              <div class="range-control" id="monoThresholdControl" hidden><label for="monoThreshold" data-i18n-text="{&quot;0&quot;: &quot;Seuil noir/blanc&quot;}">Seuil noir/blanc <output id="monoThresholdValue"></output></label><input id="monoThreshold" data-setting="monoThreshold" type="range" min="0" max="255" step="1" /></div>
+              <label class="toggle"><span data-i18n-text="{&quot;0&quot;: &quot;Inverser noir et blanc&quot;}">Inverser noir et blanc <small data-i18n-text="{&quot;0&quot;: &quot;Pour un effet négatif&quot;}">Pour un effet négatif</small></span><input type="checkbox" data-setting="monoInvert" /></label>
             </div>
           </section>
           <section class="controls-section">
-            <div class="section-title"><span class="section-number">03</span><h3>Dithering</h3></div>
-            <label class="field-label">Algorithme<select data-setting="algorithm" id="algorithmSelect"><optgroup label="Diffusion d'erreur"><option value="floyd">Floyd–Steinberg</option><option value="atkinson">Atkinson</option><option value="sierra-lite">Sierra Lite</option><option value="burkes">Burkes</option><option value="stucki">Stucki</option><option value="jjn">Jarvis–Judice–Ninke</option></optgroup><optgroup label="Tramage ordonné"><option value="bayer4">Bayer 4×4</option><option value="bayer8">Bayer 8×8</option><option value="bayer16">Bayer 16×16</option><option value="noise">Bruit réparti</option></optgroup><optgroup label="Sans tramage"><option value="none">Sans dithering</option></optgroup></select></label>
-            <label class="field-label">Correspondance des couleurs<select data-setting="distance"><option value="oklab">OKLab (perceptuel)</option><option value="weighted">RGB pondéré</option><option value="rgb">RGB classique</option></select></label>
-            <div class="range-control" data-range="strength"><label for="strength">Intensité du tramage <output id="strengthValue"></output></label><input id="strength" data-setting="strength" type="range" min="0" max="1" step="0.05" /></div>
-            <div class="range-control" data-range="grainPenalty"><label for="grainPenalty">Limiter le grain <output id="grainPenaltyValue"></output></label><input id="grainPenalty" data-setting="grainPenalty" type="range" min="0" max="0.6" step="0.02" /></div>
-            <label class="toggle"><span>Diffusion en serpentin <small>Évite les motifs directionnels</small></span><input type="checkbox" data-setting="serpentine" checked /></label>
+            <div class="section-title"><span class="section-number">03</span><h3 data-i18n-text="{&quot;0&quot;: &quot;Dithering&quot;}">Dithering</h3></div>
+            <label class="field-label" data-i18n-text="{&quot;0&quot;: &quot;Algorithme&quot;}">Algorithme<select data-setting="algorithm" id="algorithmSelect"><optgroup label="Diffusion d'erreur" data-i18n-label="Diffusion d&#x27;erreur"><option value="floyd" data-i18n-text="{&quot;0&quot;: &quot;Floyd–Steinberg&quot;}">Floyd–Steinberg</option><option value="atkinson" data-i18n-text="{&quot;0&quot;: &quot;Atkinson&quot;}">Atkinson</option><option value="sierra-lite" data-i18n-text="{&quot;0&quot;: &quot;Sierra Lite&quot;}">Sierra Lite</option><option value="burkes" data-i18n-text="{&quot;0&quot;: &quot;Burkes&quot;}">Burkes</option><option value="stucki" data-i18n-text="{&quot;0&quot;: &quot;Stucki&quot;}">Stucki</option><option value="jjn" data-i18n-text="{&quot;0&quot;: &quot;Jarvis–Judice–Ninke&quot;}">Jarvis–Judice–Ninke</option></optgroup><optgroup label="Tramage ordonné" data-i18n-label="Tramage ordonné"><option value="bayer4" data-i18n-text="{&quot;0&quot;: &quot;Bayer 4×4&quot;}">Bayer 4×4</option><option value="bayer8" data-i18n-text="{&quot;0&quot;: &quot;Bayer 8×8&quot;}">Bayer 8×8</option><option value="bayer16" data-i18n-text="{&quot;0&quot;: &quot;Bayer 16×16&quot;}">Bayer 16×16</option><option value="noise" data-i18n-text="{&quot;0&quot;: &quot;Bruit réparti&quot;}">Bruit réparti</option></optgroup><optgroup label="Sans tramage" data-i18n-label="Sans tramage"><option value="none" data-i18n-text="{&quot;0&quot;: &quot;Sans dithering&quot;}">Sans dithering</option></optgroup></select></label>
+            <label class="field-label" data-i18n-text="{&quot;0&quot;: &quot;Correspondance des couleurs&quot;}">Correspondance des couleurs<select data-setting="distance"><option value="oklab" data-i18n-text="{&quot;0&quot;: &quot;OKLab (perceptuel)&quot;}">OKLab (perceptuel)</option><option value="weighted" data-i18n-text="{&quot;0&quot;: &quot;RGB pondéré&quot;}">RGB pondéré</option><option value="rgb" data-i18n-text="{&quot;0&quot;: &quot;RGB classique&quot;}">RGB classique</option></select></label>
+            <div class="range-control" data-range="strength"><label for="strength" data-i18n-text="{&quot;0&quot;: &quot;Intensité du tramage&quot;}">Intensité du tramage <output id="strengthValue"></output></label><input id="strength" data-setting="strength" type="range" min="0" max="1" step="0.05" /></div>
+            <div class="range-control" data-range="grainPenalty"><label for="grainPenalty" data-i18n-text="{&quot;0&quot;: &quot;Limiter le grain&quot;}">Limiter le grain <output id="grainPenaltyValue"></output></label><input id="grainPenalty" data-setting="grainPenalty" type="range" min="0" max="0.6" step="0.02" /></div>
+            <label class="toggle"><span data-i18n-text="{&quot;0&quot;: &quot;Diffusion en serpentin&quot;}">Diffusion en serpentin <small data-i18n-text="{&quot;0&quot;: &quot;Évite les motifs directionnels&quot;}">Évite les motifs directionnels</small></span><input type="checkbox" data-setting="serpentine" checked /></label>
           </section>
           <section class="controls-section">
-            <div class="section-title"><span class="section-number">04</span><h3>Luminosité & couleurs</h3></div>
-            <label class="toggle"><span>Niveaux automatiques <small>Équilibrage global</small></span><input type="checkbox" data-setting="autoLevels" /></label>
-            <div class="range-control"><label for="exposure">Exposition <output id="exposureValue"></output></label><input id="exposure" data-setting="exposure" type="range" min="-2" max="2" step="0.1" /></div>
-            <div class="range-control"><label for="gamma">Gamma <output id="gammaValue"></output></label><input id="gamma" data-setting="gamma" type="range" min="0.6" max="2" step="0.02" /></div>
-            <div class="range-control"><label for="contrast">Contraste <output id="contrastValue"></output></label><input id="contrast" data-setting="contrast" type="range" min="0.5" max="2" step="0.02" /></div>
-            <div class="range-control"><label for="shadows">Ombres <output id="shadowsValue"></output></label><input id="shadows" data-setting="shadows" type="range" min="-100" max="100" step="5" /></div>
-            <div class="range-control"><label for="highlights">Hautes lumières <output id="highlightsValue"></output></label><input id="highlights" data-setting="highlights" type="range" min="-100" max="100" step="5" /></div>
-            <div class="range-control"><label for="saturation">Saturation <output id="saturationValue"></output></label><input id="saturation" data-setting="saturation" type="range" min="0" max="2" step="0.05" /></div>
-            <div class="range-control"><label for="vibrance">Vibrance <output id="vibranceValue"></output></label><input id="vibrance" data-setting="vibrance" type="range" min="-100" max="100" step="5" /></div>
-            <div class="range-control"><label for="temperature">Température <output id="temperatureValue"></output></label><input id="temperature" data-setting="temperature" type="range" min="-100" max="100" step="5" /></div>
-            <div class="range-control"><label for="tint">Teinte vert / magenta <output id="tintValue"></output></label><input id="tint" data-setting="tint" type="range" min="-100" max="100" step="5" /></div>
+            <div class="section-title"><span class="section-number">04</span><h3 data-i18n-text="{&quot;0&quot;: &quot;Luminosité &amp; couleurs&quot;}">Luminosité & couleurs</h3></div>
+            <label class="toggle"><span data-i18n-text="{&quot;0&quot;: &quot;Niveaux automatiques&quot;}">Niveaux automatiques <small data-i18n-text="{&quot;0&quot;: &quot;Équilibrage global&quot;}">Équilibrage global</small></span><input type="checkbox" data-setting="autoLevels" /></label>
+            <div class="range-control"><label for="exposure" data-i18n-text="{&quot;0&quot;: &quot;Exposition&quot;}">Exposition <output id="exposureValue"></output></label><input id="exposure" data-setting="exposure" type="range" min="-2" max="2" step="0.1" /></div>
+            <div class="range-control"><label for="gamma" data-i18n-text="{&quot;0&quot;: &quot;Gamma&quot;}">Gamma <output id="gammaValue"></output></label><input id="gamma" data-setting="gamma" type="range" min="0.6" max="2" step="0.02" /></div>
+            <div class="range-control"><label for="contrast" data-i18n-text="{&quot;0&quot;: &quot;Contraste&quot;}">Contraste <output id="contrastValue"></output></label><input id="contrast" data-setting="contrast" type="range" min="0.5" max="2" step="0.02" /></div>
+            <div class="range-control"><label for="shadows" data-i18n-text="{&quot;0&quot;: &quot;Ombres&quot;}">Ombres <output id="shadowsValue"></output></label><input id="shadows" data-setting="shadows" type="range" min="-100" max="100" step="5" /></div>
+            <div class="range-control"><label for="highlights" data-i18n-text="{&quot;0&quot;: &quot;Hautes lumières&quot;}">Hautes lumières <output id="highlightsValue"></output></label><input id="highlights" data-setting="highlights" type="range" min="-100" max="100" step="5" /></div>
+            <div class="range-control"><label for="saturation" data-i18n-text="{&quot;0&quot;: &quot;Saturation&quot;}">Saturation <output id="saturationValue"></output></label><input id="saturation" data-setting="saturation" type="range" min="0" max="2" step="0.05" /></div>
+            <div class="range-control"><label for="vibrance" data-i18n-text="{&quot;0&quot;: &quot;Vibrance&quot;}">Vibrance <output id="vibranceValue"></output></label><input id="vibrance" data-setting="vibrance" type="range" min="-100" max="100" step="5" /></div>
+            <div class="range-control"><label for="temperature" data-i18n-text="{&quot;0&quot;: &quot;Température&quot;}">Température <output id="temperatureValue"></output></label><input id="temperature" data-setting="temperature" type="range" min="-100" max="100" step="5" /></div>
+            <div class="range-control"><label for="tint" data-i18n-text="{&quot;0&quot;: &quot;Teinte vert / magenta&quot;}">Teinte vert / magenta <output id="tintValue"></output></label><input id="tint" data-setting="tint" type="range" min="-100" max="100" step="5" /></div>
           </section>
           <section class="controls-section">
-            <div class="section-title"><span class="section-number">05</span><h3>Finition</h3></div>
-            <div class="range-control"><label for="sharpen">Netteté <output id="sharpenValue"></output></label><input id="sharpen" data-setting="sharpen" type="range" min="0" max="2" step="0.05" /></div>
-            <div class="range-control"><label for="denoise">Réduction du bruit <output id="denoiseValue"></output></label><input id="denoise" data-setting="denoise" type="range" min="0" max="1" step="0.05" /></div>
+            <div class="section-title"><span class="section-number">05</span><h3 data-i18n-text="{&quot;0&quot;: &quot;Finition&quot;}">Finition</h3></div>
+            <div class="range-control"><label for="sharpen" data-i18n-text="{&quot;0&quot;: &quot;Netteté&quot;}">Netteté <output id="sharpenValue"></output></label><input id="sharpen" data-setting="sharpen" type="range" min="0" max="2" step="0.05" /></div>
+            <div class="range-control"><label for="denoise" data-i18n-text="{&quot;0&quot;: &quot;Réduction du bruit&quot;}">Réduction du bruit <output id="denoiseValue"></output></label><input id="denoise" data-setting="denoise" type="range" min="0" max="1" step="0.05" /></div>
           </section>
-          <div class="settings-footer"><label class="link-btn config-import">Importer des réglages JSON<input type="file" id="importConfig" accept=".json,application/json" hidden /></label><span>Paramètres mémorisés localement</span></div>
+          <div class="settings-footer"><label class="link-btn config-import" data-i18n-text="{&quot;0&quot;: &quot;Importer des réglages JSON&quot;}">Importer des réglages JSON<input type="file" id="importConfig" accept=".json,application/json" hidden /></label><span data-i18n-text="{&quot;0&quot;: &quot;Paramètres mémorisés localement&quot;}">Paramètres mémorisés localement</span></div>
         </div>
       </aside>
     </main>
     <section class="frame-page" id="framePage" hidden>
-      <div class="frame-intro"><div><span class="eyebrow">CONFIGURATION DU MATÉRIEL</span><h1>Paramètres du <em>cadre RP2040</em></h1><p>Générez <code>settings.conf</code> pour la racine de votre microSD. Les réglages sont validés et conservés localement.</p></div><div class="frame-intro-actions"><label class="btn btn-outline">Importer un .conf<input id="frameImport" type="file" accept=".conf,.ini,text/plain" hidden /></label><button class="btn btn-outline" id="frameReset">Réinitialiser</button><button class="btn btn-primary" id="frameDownload">↓ Télécharger settings.conf</button></div></div>
+      <div class="frame-intro"><div><span class="eyebrow" data-i18n-text="{&quot;0&quot;: &quot;CONFIGURATION DU MATÉRIEL&quot;}">CONFIGURATION DU MATÉRIEL</span><h1 data-i18n-text="{&quot;0&quot;: &quot;Paramètres du&quot;}">Paramètres du <em data-i18n-text="{&quot;0&quot;: &quot;cadre RP2040&quot;}">cadre RP2040</em></h1><p data-i18n-text="{&quot;0&quot;: &quot;Générez&quot;, &quot;2&quot;: &quot;pour la racine de votre microSD. Les réglages sont validés et conservés localement.&quot;}">Générez <code>settings.conf</code> pour la racine de votre microSD. Les réglages sont validés et conservés localement.</p></div><div class="frame-intro-actions"><label class="btn btn-outline" data-i18n-text="{&quot;0&quot;: &quot;Importer un .conf&quot;}">Importer un .conf<input id="frameImport" type="file" accept=".conf,.ini,text/plain" hidden /></label><button class="btn btn-outline" id="frameReset" data-i18n-text="{&quot;0&quot;: &quot;Réinitialiser&quot;}">Réinitialiser</button><button class="btn btn-primary" id="frameDownload" data-i18n-text="{&quot;0&quot;: &quot;↓ Télécharger settings.conf&quot;}">↓ Télécharger settings.conf</button></div></div>
       <div class="frame-columns"><div class="frame-fields">
-        <section class="frame-card"><h2>01 · Diaporama et orientation</h2>
+        <section class="frame-card"><h2 data-i18n-text="{&quot;0&quot;: &quot;01 · Diaporama et orientation&quot;}">01 · Diaporama et orientation</h2>
           <div class="frame-field-grid">
-            <label>Orientation<select data-frame-setting="orientation"><option value="0">0°</option><option value="90">90°</option><option value="180">180°</option><option value="270">270°</option></select></label>
-            <label>Intervalle entre images (minutes)<input data-frame-setting="refresh_minutes" type="number" min="1" max="10080" step="1" /></label>
-            <label>Cadrage BMP / JPEG<select data-frame-setting="image_fit"><option value="contain">Contenir</option><option value="cover">Couvrir</option></select></label>
-            <label>JPEG progressif<select data-frame-setting="progressive_jpeg"><option value="preview">Aperçu réduit</option><option value="reject">Refuser</option></select></label>
-            <label>Début de la pause nocturne<input data-frame-setting="quiet_hours_start" type="time" /></label>
-            <label>Fin de la pause nocturne<input data-frame-setting="quiet_hours_end" type="time" /></label>
+            <label data-i18n-text="{&quot;0&quot;: &quot;Orientation&quot;}">Orientation<select data-frame-setting="orientation"><option value="0">0°</option><option value="90">90°</option><option value="180">180°</option><option value="270">270°</option></select></label>
+            <label data-i18n-text="{&quot;0&quot;: &quot;Intervalle entre images (minutes)&quot;}">Intervalle entre images (minutes)<input data-frame-setting="refresh_minutes" type="number" min="1" max="10080" step="1" /></label>
+            <label data-i18n-text="{&quot;0&quot;: &quot;Cadrage BMP / JPEG&quot;}">Cadrage BMP / JPEG<select data-frame-setting="image_fit"><option value="contain" data-i18n-text="{&quot;0&quot;: &quot;Contenir&quot;}">Contenir</option><option value="cover" data-i18n-text="{&quot;0&quot;: &quot;Couvrir&quot;}">Couvrir</option></select></label>
+            <label data-i18n-text="{&quot;0&quot;: &quot;JPEG progressif&quot;}">JPEG progressif<select data-frame-setting="progressive_jpeg"><option value="preview" data-i18n-text="{&quot;0&quot;: &quot;Aperçu réduit&quot;}">Aperçu réduit</option><option value="reject" data-i18n-text="{&quot;0&quot;: &quot;Refuser&quot;}">Refuser</option></select></label>
+            <label data-i18n-text="{&quot;0&quot;: &quot;Début de la pause nocturne&quot;}">Début de la pause nocturne<input data-frame-setting="quiet_hours_start" type="time" /></label>
+            <label data-i18n-text="{&quot;0&quot;: &quot;Fin de la pause nocturne&quot;}">Fin de la pause nocturne<input data-frame-setting="quiet_hours_end" type="time" /></label>
           </div>
-          <div class="frame-toggles"><label><input data-frame-setting="shuffle" type="checkbox" /> Mélanger les photos sans répétition dans le cycle</label><label><input data-frame-setting="single_image_auto_pause" type="checkbox" /> Suspendre les réveils si une seule photo</label><label><input data-frame-setting="usb_auto_next" type="checkbox" /> Défilement automatique aussi sur USB</label></div>
-          <p class="frame-note">AUTO-NEXT est un sélecteur matériel : en fonctionnement batterie, il autorise ou bloque le réveil RTC. Les horaires sont ceux du RTC, sans gestion automatique de fuseau horaire. Orientation sans effet sur les fichiers natifs EPD.</p>
+          <div class="frame-toggles"><label data-i18n-text="{&quot;1&quot;: &quot;Mélanger les photos sans répétition dans le cycle&quot;}"><input data-frame-setting="shuffle" type="checkbox" /> Mélanger les photos sans répétition dans le cycle</label><label data-i18n-text="{&quot;1&quot;: &quot;Suspendre les réveils si une seule photo&quot;}"><input data-frame-setting="single_image_auto_pause" type="checkbox" /> Suspendre les réveils si une seule photo</label><label data-i18n-text="{&quot;1&quot;: &quot;Défilement automatique aussi sur USB&quot;}"><input data-frame-setting="usb_auto_next" type="checkbox" /> Défilement automatique aussi sur USB</label></div>
+          <p class="frame-note" data-i18n-text="{&quot;0&quot;: &quot;AUTO-NEXT est un sélecteur matériel : en fonctionnement batterie, il autorise ou bloque le réveil RTC. Les horaires sont ceux du RTC, sans gestion automatique de fuseau horaire. Orientation sans effet sur les fichiers natifs EPD.&quot;}">AUTO-NEXT est un sélecteur matériel : en fonctionnement batterie, il autorise ou bloque le réveil RTC. Les horaires sont ceux du RTC, sans gestion automatique de fuseau horaire. Orientation sans effet sur les fichiers natifs EPD.</p>
         </section>
-        <section class="frame-card"><h2>02 · Énergie, cache et batterie</h2>
+        <section class="frame-card"><h2 data-i18n-text="{&quot;0&quot;: &quot;02 · Énergie, cache et batterie&quot;}">02 · Énergie, cache et batterie</h2>
           <div class="frame-field-grid">
-            <label>Seuil batterie faible (V)<input data-frame-setting="low_battery_v" type="number" min="3.2" max="3.8" step="0.05" /></label>
-            <label>Seuil critique (V)<input data-frame-setting="critical_cutoff_v" type="number" min="3.0" max="3.4" step="0.05" /></label>
-            <label>Écriture cache au-dessus de (V)<input data-frame-setting="cache_write_min_v" type="number" min="3.3" max="4.2" step="0.05" /></label>
-            <label>Calibrage tension (×)<input data-frame-setting="battery_calibration" type="number" min="0.85" max="1.15" step="0.001" /></label>
+            <label data-i18n-text="{&quot;0&quot;: &quot;Seuil batterie faible (V)&quot;}">Seuil batterie faible (V)<input data-frame-setting="low_battery_v" type="number" min="3.2" max="3.8" step="0.05" /></label>
+            <label data-i18n-text="{&quot;0&quot;: &quot;Seuil critique (V)&quot;}">Seuil critique (V)<input data-frame-setting="critical_cutoff_v" type="number" min="3.0" max="3.4" step="0.05" /></label>
+            <label data-i18n-text="{&quot;0&quot;: &quot;Écriture cache au-dessus de (V)&quot;}">Écriture cache au-dessus de (V)<input data-frame-setting="cache_write_min_v" type="number" min="3.3" max="4.2" step="0.05" /></label>
+            <label data-i18n-text="{&quot;0&quot;: &quot;Calibrage tension (×)&quot;}">Calibrage tension (×)<input data-frame-setting="battery_calibration" type="number" min="0.85" max="1.15" step="0.001" /></label>
           </div>
-          <div class="frame-toggles"><label><input data-frame-setting="cache_enabled" type="checkbox" /> Cache des JPEG et BMP</label><label><input data-frame-setting="skip_unchanged" type="checkbox" /> Éviter un rafraîchissement identique</label><label><input data-frame-setting="activity_led" type="checkbox" /> LED ACT pendant le travail</label></div>
-          <p class="frame-note">L'export EPD ne nécessite pas de cache. Mesurez la tension avec un multimètre avant de modifier le coefficient de calibrage.</p>
+          <div class="frame-toggles"><label data-i18n-text="{&quot;1&quot;: &quot;Cache des JPEG et BMP&quot;}"><input data-frame-setting="cache_enabled" type="checkbox" /> Cache des JPEG et BMP</label><label data-i18n-text="{&quot;1&quot;: &quot;Éviter un rafraîchissement identique&quot;}"><input data-frame-setting="skip_unchanged" type="checkbox" /> Éviter un rafraîchissement identique</label><label data-i18n-text="{&quot;1&quot;: &quot;LED ACT pendant le travail&quot;}"><input data-frame-setting="activity_led" type="checkbox" /> LED ACT pendant le travail</label></div>
+          <p class="frame-note" data-i18n-text="{&quot;0&quot;: &quot;L&#x27;export EPD ne nécessite pas de cache. Mesurez la tension avec un multimètre avant de modifier le coefficient de calibrage.&quot;}">L'export EPD ne nécessite pas de cache. Mesurez la tension avec un multimètre avant de modifier le coefficient de calibrage.</p>
         </section>
-        <section class="frame-card"><h2>03 · Diagnostic USB <small>Web Serial · Chrome/Chromium</small></h2>
-          <div class="frame-intro-actions"><button class="btn btn-outline" id="serialConnect">Connecter le RP2040</button><button class="btn btn-outline" id="serialStatus">STATUS</button><button class="btn btn-outline" id="serialNext">NEXT</button><button class="btn btn-outline" id="serialSyncTime">Synchroniser l'horloge</button></div>
-          <div class="serial-command"><input id="serialCommand" placeholder="HELP, TIME, LIST…" /><button class="btn btn-secondary" id="serialSend" disabled>Envoyer</button></div><pre id="serialLog" class="serial-log" aria-live="polite"></pre>
-          <p class="frame-note">Connexion uniquement sur HTTPS ou localhost, avec votre autorisation. Le transfert d'images sur la microSD n'est pas encore supporté par le protocole série.</p>
+        <section class="frame-card"><h2 data-i18n-text="{&quot;0&quot;: &quot;03 · Diagnostic USB&quot;}">03 · Diagnostic USB <small data-i18n-text="{&quot;0&quot;: &quot;Web Serial · Chrome/Chromium&quot;}">Web Serial · Chrome/Chromium</small></h2>
+          <div class="frame-intro-actions"><button class="btn btn-outline" id="serialConnect" data-i18n-text="{&quot;0&quot;: &quot;Connecter le RP2040&quot;}">Connecter le RP2040</button><button class="btn btn-outline" id="serialStatus" data-i18n-text="{&quot;0&quot;: &quot;STATUS&quot;}">STATUS</button><button class="btn btn-outline" id="serialNext" data-i18n-text="{&quot;0&quot;: &quot;NEXT&quot;}">NEXT</button><button class="btn btn-outline" id="serialSyncTime" data-i18n-text="{&quot;0&quot;: &quot;Synchroniser l&#x27;horloge&quot;}">Synchroniser l'horloge</button></div>
+          <div class="serial-command"><input id="serialCommand" placeholder="HELP, TIME, LIST…"  data-i18n-placeholder="HELP, TIME, LIST…"/><button class="btn btn-secondary" id="serialSend" disabled data-i18n-text="{&quot;0&quot;: &quot;Envoyer&quot;}">Envoyer</button></div><pre id="serialLog" class="serial-log" aria-live="polite"></pre>
+          <p class="frame-note" data-i18n-text="{&quot;0&quot;: &quot;Connexion uniquement sur HTTPS ou localhost, avec votre autorisation. Le transfert d&#x27;images sur la microSD n&#x27;est pas encore supporté par le protocole série.&quot;}">Connexion uniquement sur HTTPS ou localhost, avec votre autorisation. Le transfert d'images sur la microSD n'est pas encore supporté par le protocole série.</p>
         </section>
-      </div><aside class="frame-card frame-output"><h2>Fichier settings.conf</h2><p>Prévisualisation exacte du fichier à déposer à la racine de la carte SD.</p><textarea id="frameConfText" readonly spellcheck="false" rows="24"></textarea><div id="frameValidation" class="frame-validation" role="status"></div><p class="frame-note">Les fichiers .epd exportés ont déjà leur rotation et palette intégrées. Une seule configuration s'applique à tout le cadre.</p></aside></div>
+      </div><aside class="frame-card frame-output"><h2 data-i18n-text="{&quot;0&quot;: &quot;Fichier settings.conf&quot;}">Fichier settings.conf</h2><p data-i18n-text="{&quot;0&quot;: &quot;Prévisualisation exacte du fichier à déposer à la racine de la carte SD.&quot;}">Prévisualisation exacte du fichier à déposer à la racine de la carte SD.</p><textarea id="frameConfText" readonly spellcheck="false" rows="24"></textarea><div id="frameValidation" class="frame-validation" role="status"></div><p class="frame-note" data-i18n-text="{&quot;0&quot;: &quot;Les fichiers .epd exportés ont déjà leur rotation et palette intégrées. Une seule configuration s&#x27;applique à tout le cadre.&quot;}">Les fichiers .epd exportés ont déjà leur rotation et palette intégrées. Une seule configuration s'applique à tout le cadre.</p></aside></div>
     </section>
     <section class="firmware-page" id="firmwarePage" hidden>
       <div class="frame-intro">
-        <div><span class="eyebrow">WAVESHARE PHOTO PAINTER · RP2040</span>
-          <h1>Firmware <em>&amp; flash UF2</em></h1>
-          <p>Récupérez le firmware compilé automatiquement par GitHub Actions, puis installez-le sans outil spécialisé.</p>
+        <div><span class="eyebrow" data-i18n-text="{&quot;0&quot;: &quot;WAVESHARE PHOTO PAINTER · RP2040&quot;}">WAVESHARE PHOTO PAINTER · RP2040</span>
+          <h1 data-i18n-text="{&quot;0&quot;: &quot;Firmware&quot;}">Firmware <em data-i18n-text="{&quot;0&quot;: &quot;&amp; flash UF2&quot;}">&amp; flash UF2</em></h1>
+          <p data-i18n-text="{&quot;0&quot;: &quot;Récupérez le firmware compilé automatiquement par GitHub Actions, puis installez-le sans outil spécialisé.&quot;}">Récupérez le firmware compilé automatiquement par GitHub Actions, puis installez-le sans outil spécialisé.</p>
         </div>
-        <button class="btn btn-outline" id="fwRefresh" type="button">↻ Actualiser les versions</button>
+        <button class="btn btn-outline" id="fwRefresh" type="button" data-i18n-text="{&quot;0&quot;: &quot;↻ Actualiser les versions&quot;}">↻ Actualiser les versions</button>
       </div>
       <div class="firmware-grid">
         <article class="frame-card firmware-card">
-          <span class="eyebrow">01 · VERSION CONSEILLÉE</span>
-          <h2>Dernière version stable</h2>
-          <p id="fwReleaseStatus" aria-live="polite">Recherche de la dernière release…</p>
-          <a class="btn btn-primary" id="fwStableDownload" href="#" hidden>↓ Télécharger le firmware stable</a>
-          <p class="frame-note">Fichier <code>PhotoPainter-RP2040.uf2</code> publié avec une release GitHub portant un tag <code>vX.Y.Z</code>.</p>
-          <a class="firmware-link" id="fwReleasesLink" href="#" target="_blank" rel="noopener noreferrer" hidden>Toutes les releases GitHub ↗</a>
+          <span class="eyebrow" data-i18n-text="{&quot;0&quot;: &quot;01 · VERSION CONSEILLÉE&quot;}">01 · VERSION CONSEILLÉE</span>
+          <h2 data-i18n-text="{&quot;0&quot;: &quot;Dernière version stable&quot;}">Dernière version stable</h2>
+          <p id="fwReleaseStatus" aria-live="polite" data-i18n-text="{&quot;0&quot;: &quot;Recherche de la dernière release…&quot;}">Recherche de la dernière release…</p>
+          <a class="btn btn-primary" id="fwStableDownload" href="#" hidden data-i18n-text="{&quot;0&quot;: &quot;↓ Télécharger le firmware stable&quot;}">↓ Télécharger le firmware stable</a>
+          <p class="frame-note" data-i18n-text="{&quot;0&quot;: &quot;Fichier&quot;, &quot;2&quot;: &quot;publié avec une release GitHub portant un tag&quot;}">Fichier <code>PhotoPainter-RP2040.uf2</code> publié avec une release GitHub portant un tag <code>vX.Y.Z</code>.</p>
+          <a class="firmware-link" id="fwReleasesLink" href="#" target="_blank" rel="noopener noreferrer" hidden data-i18n-text="{&quot;0&quot;: &quot;Toutes les releases GitHub ↗&quot;}">Toutes les releases GitHub ↗</a>
         </article>
         <article class="frame-card firmware-card">
-          <span class="eyebrow">02 · DERNIER BUILD DE MAIN</span>
-          <h2>Firmware de développement</h2>
-          <p id="fwBuildStatus" aria-live="polite">Recherche du dernier build…</p>
-          <a class="btn btn-secondary" id="fwDevDownload" href="#" hidden>↓ Télécharger le firmware (main)</a>
-          <dl class="firmware-meta"><div><dt>Commit</dt><dd id="fwBuildCommit">—</dd></div><div><dt>SHA-256</dt><dd id="fwBuildChecksum">—</dd></div></dl>
-          <p class="frame-note">Reconstruit sur chaque push <code>main</code> réussi, publié directement sur ce site. Ce n'est pas nécessairement une version stable.</p>
-          <a class="firmware-link" id="fwActionsLink" href="#" target="_blank" rel="noopener noreferrer" hidden>Voir les compilations GitHub ↗</a>
+          <span class="eyebrow" data-i18n-text="{&quot;0&quot;: &quot;02 · DERNIER BUILD DE MAIN&quot;}">02 · DERNIER BUILD DE MAIN</span>
+          <h2 data-i18n-text="{&quot;0&quot;: &quot;Firmware de développement&quot;}">Firmware de développement</h2>
+          <p id="fwBuildStatus" aria-live="polite" data-i18n-text="{&quot;0&quot;: &quot;Recherche du dernier build…&quot;}">Recherche du dernier build…</p>
+          <a class="btn btn-secondary" id="fwDevDownload" href="#" hidden data-i18n-text="{&quot;0&quot;: &quot;↓ Télécharger le firmware (main)&quot;}">↓ Télécharger le firmware (main)</a>
+          <dl class="firmware-meta"><div><dt data-i18n-text="{&quot;0&quot;: &quot;Commit&quot;}">Commit</dt><dd id="fwBuildCommit">—</dd></div><div><dt data-i18n-text="{&quot;0&quot;: &quot;SHA-256&quot;}">SHA-256</dt><dd id="fwBuildChecksum">—</dd></div></dl>
+          <p class="frame-note" data-i18n-text="{&quot;0&quot;: &quot;Reconstruit sur chaque push&quot;, &quot;2&quot;: &quot;réussi, publié directement sur ce site. Ce n&#x27;est pas nécessairement une version stable.&quot;}">Reconstruit sur chaque push <code>main</code> réussi, publié directement sur ce site. Ce n'est pas nécessairement une version stable.</p>
+          <a class="firmware-link" id="fwActionsLink" href="#" target="_blank" rel="noopener noreferrer" hidden data-i18n-text="{&quot;0&quot;: &quot;Voir les compilations GitHub ↗&quot;}">Voir les compilations GitHub ↗</a>
         </article>
       </div>
       <div class="firmware-grid firmware-bottom">
         <article class="frame-card firmware-card firmware-guide">
-          <span class="eyebrow">03 · INSTALLATION USB</span>
-          <h2>Flasher le cadre en mode BOOTSEL</h2>
+          <span class="eyebrow" data-i18n-text="{&quot;0&quot;: &quot;03 · INSTALLATION USB&quot;}">03 · INSTALLATION USB</span>
+          <h2 data-i18n-text="{&quot;0&quot;: &quot;Flasher le cadre en mode BOOTSEL&quot;}">Flasher le cadre en mode BOOTSEL</h2>
           <ol class="firmware-steps">
-            <li><strong>Téléchargez le fichier <code>.uf2</code></strong> ci-dessus. Ne le décompressez pas et ne le copiez pas sur la carte microSD.</li>
-            <li><strong>Connectez le cadre par un câble USB de données.</strong> Laissez la carte microSD en place ; son contenu sera conservé.</li>
-            <li><strong>Maintenez BOOT, appuyez brièvement sur RUN, puis relâchez BOOT.</strong> Si besoin, débranchez l’USB, maintenez BOOT, rebranchez l’USB puis relâchez BOOT.</li>
-            <li><strong>Ouvrez le lecteur <code>RPI-RP2</code></strong> qui apparaît sur votre ordinateur.</li>
-            <li><strong>Glissez le fichier <code>.uf2</code> sur <code>RPI-RP2</code>.</strong> Le lecteur disparaît et le RP2040 redémarre automatiquement.</li>
-            <li><strong>Vérifiez le firmware.</strong> Dans Studio → Configurer le cadre → USB, connectez le port série et envoyez <code>STATUS</code> à 115200 bauds.</li>
+            <li data-i18n-text="{&quot;1&quot;: &quot;ci-dessus. Ne le décompressez pas et ne le copiez pas sur la carte microSD.&quot;}"><strong data-i18n-text="{&quot;0&quot;: &quot;Téléchargez le fichier&quot;}">Téléchargez le fichier <code>.uf2</code></strong> ci-dessus. Ne le décompressez pas et ne le copiez pas sur la carte microSD.</li>
+            <li data-i18n-text="{&quot;1&quot;: &quot;Laissez la carte microSD en place ; son contenu sera conservé.&quot;}"><strong data-i18n-text="{&quot;0&quot;: &quot;Connectez le cadre par un câble USB de données.&quot;}">Connectez le cadre par un câble USB de données.</strong> Laissez la carte microSD en place ; son contenu sera conservé.</li>
+            <li data-i18n-text="{&quot;1&quot;: &quot;Si besoin, débranchez l’USB, maintenez BOOT, rebranchez l’USB puis relâchez BOOT.&quot;}"><strong data-i18n-text="{&quot;0&quot;: &quot;Maintenez BOOT, appuyez brièvement sur RUN, puis relâchez BOOT.&quot;}">Maintenez BOOT, appuyez brièvement sur RUN, puis relâchez BOOT.</strong> Si besoin, débranchez l’USB, maintenez BOOT, rebranchez l’USB puis relâchez BOOT.</li>
+            <li data-i18n-text="{&quot;1&quot;: &quot;qui apparaît sur votre ordinateur.&quot;}"><strong data-i18n-text="{&quot;0&quot;: &quot;Ouvrez le lecteur&quot;}">Ouvrez le lecteur <code>RPI-RP2</code></strong> qui apparaît sur votre ordinateur.</li>
+            <li data-i18n-text="{&quot;1&quot;: &quot;Le lecteur disparaît et le RP2040 redémarre automatiquement.&quot;}"><strong data-i18n-text="{&quot;0&quot;: &quot;Glissez le fichier&quot;, &quot;2&quot;: &quot;sur&quot;}">Glissez le fichier <code>.uf2</code> sur <code>RPI-RP2</code>.</strong> Le lecteur disparaît et le RP2040 redémarre automatiquement.</li>
+            <li data-i18n-text="{&quot;1&quot;: &quot;Dans Studio → Configurer le cadre → USB, connectez le port série et envoyez&quot;, &quot;3&quot;: &quot;à 115200 bauds.&quot;}"><strong data-i18n-text="{&quot;0&quot;: &quot;Vérifiez le firmware.&quot;}">Vérifiez le firmware.</strong> Dans Studio → Configurer le cadre → USB, connectez le port série et envoyez <code>STATUS</code> à 115200 bauds.</li>
           </ol>
-          <p class="firmware-warning"><strong>Compatibilité :</strong> uniquement la carte <strong>Waveshare PhotoPainter RP2040 (F) 7,3 pouces, 800 × 480, 7 couleurs</strong>. Ne pas utiliser cet UF2 sur les versions RP2350 ou ESP32-S3. L'image E Ink peut rester identique après le flash : c'est normal.</p>
+          <p class="firmware-warning" data-i18n-text="{&quot;1&quot;: &quot;uniquement la carte&quot;, &quot;3&quot;: &quot;. Ne pas utiliser cet UF2 sur les versions RP2350 ou ESP32-S3. L&#x27;image E Ink peut rester identique après le flash : c&#x27;est normal.&quot;}"><strong data-i18n-text="{&quot;0&quot;: &quot;Compatibilité :&quot;}">Compatibilité :</strong> uniquement la carte <strong data-i18n-text="{&quot;0&quot;: &quot;Waveshare PhotoPainter RP2040 (F) 7,3 pouces, 800 × 480, 7 couleurs&quot;}">Waveshare PhotoPainter RP2040 (F) 7,3 pouces, 800 × 480, 7 couleurs</strong>. Ne pas utiliser cet UF2 sur les versions RP2350 ou ESP32-S3. L'image E Ink peut rester identique après le flash : c'est normal.</p>
         </article>
         <aside class="frame-card firmware-card firmware-manual">
-          <span class="eyebrow">04 · EN CAS DE PROBLÈME</span>
-          <h2>Compilation locale / Fedora</h2>
-          <p>Depuis la racine du dépôt ouvert avec PlatformIO :</p>
+          <span class="eyebrow" data-i18n-text="{&quot;0&quot;: &quot;04 · EN CAS DE PROBLÈME&quot;}">04 · EN CAS DE PROBLÈME</span>
+          <h2 data-i18n-text="{&quot;0&quot;: &quot;Compilation locale&quot;}">Compilation locale</h2>
+          <p data-i18n-text="{&quot;0&quot;: &quot;Depuis la racine du dépôt ouvert avec PlatformIO :&quot;}">Depuis la racine du dépôt ouvert avec PlatformIO :</p>
           <pre class="firmware-code">pio run -e photopainter_rp2040</pre>
-          <p>Le firmware est généré ici :</p>
+          <p data-i18n-text="{&quot;0&quot;: &quot;Le firmware est généré ici :&quot;}">Le firmware est généré ici :</p>
           <pre class="firmware-code">.pio/build/photopainter_rp2040/firmware.uf2</pre>
-          <p>Si <code>RPI-RP2</code> est monté automatiquement sous Fedora :</p>
+          <p data-i18n-text="{&quot;0&quot;: &quot;Sous Linux ou macOS, remplacez le chemin ci-dessous par le point de montage du lecteur&quot;, &quot;2&quot;: &quot;. Vous pouvez aussi copier le fichier avec votre gestionnaire de fichiers :&quot;}">Sous Linux ou macOS, remplacez le chemin ci-dessous par le point de montage du lecteur <code>RPI-RP2</code>. Vous pouvez aussi copier le fichier avec votre gestionnaire de fichiers :</p>
           <pre class="firmware-code">cp .pio/build/photopainter_rp2040/firmware.uf2 \
-  "/run/media/$USER/RPI-RP2/"</pre>
-          <details><summary>Je ne vois pas le lecteur RPI-RP2</summary><p>Vérifiez le câble USB (certains ne transmettent que l'alimentation), le port et l'ordre BOOT/RUN. Fermez tout moniteur série ouvert. Vérifiez avec <code>lsblk -f</code> que le lecteur a été monté.</p></details>
-          <details><summary>Upload and Monitor fonctionne mal</summary><p>Si PlatformIO affiche <code>No new RPxxxx device found yet</code>, essayez le flash manuel UF2. Un message <code>Verifying Flash: OK</code> indique que l'écriture a bien été vérifiée.</p></details>
-          <details><summary>Le site peut-il flasher directement ?</summary><p>Non : le navigateur ne copie pas automatiquement le firmware sur le volume BOOTSEL. Téléchargez l'UF2, puis utilisez le gestionnaire de fichiers. Web Serial sert uniquement au diagnostic et aux commandes du firmware déjà installé.</p></details>
+  "/chemin/vers/RPI-RP2/"</pre>
+          <details><summary data-i18n-text="{&quot;0&quot;: &quot;Je ne vois pas le lecteur RPI-RP2&quot;}">Je ne vois pas le lecteur RPI-RP2</summary><p data-i18n-text="{&quot;0&quot;: &quot;Vérifiez le câble USB (certains ne transmettent que l&#x27;alimentation), le port et l&#x27;ordre BOOT/RUN. Fermez tout moniteur série ouvert. Vérifiez avec&quot;, &quot;2&quot;: &quot;que le lecteur a été monté.&quot;}">Vérifiez le câble USB (certains ne transmettent que l'alimentation), le port et l'ordre BOOT/RUN. Fermez tout moniteur série ouvert. Vérifiez avec <code>lsblk -f</code> que le lecteur a été monté.</p></details>
+          <details><summary data-i18n-text="{&quot;0&quot;: &quot;Upload and Monitor fonctionne mal&quot;}">Upload and Monitor fonctionne mal</summary><p data-i18n-text="{&quot;0&quot;: &quot;Si PlatformIO affiche&quot;, &quot;2&quot;: &quot;, essayez le flash manuel UF2. Un message&quot;, &quot;4&quot;: &quot;indique que l&#x27;écriture a bien été vérifiée.&quot;}">Si PlatformIO affiche <code>No new RPxxxx device found yet</code>, essayez le flash manuel UF2. Un message <code>Verifying Flash: OK</code> indique que l'écriture a bien été vérifiée.</p></details>
+          <details><summary data-i18n-text="{&quot;0&quot;: &quot;Le site peut-il flasher directement ?&quot;}">Le site peut-il flasher directement ?</summary><p data-i18n-text="{&quot;0&quot;: &quot;Non : le navigateur ne copie pas automatiquement le firmware sur le volume BOOTSEL. Téléchargez l&#x27;UF2, puis utilisez le gestionnaire de fichiers. Web Serial sert uniquement au diagnostic et aux commandes du firmware déjà installé.&quot;}">Non : le navigateur ne copie pas automatiquement le firmware sur le volume BOOTSEL. Téléchargez l'UF2, puis utilisez le gestionnaire de fichiers. Web Serial sert uniquement au diagnostic et aux commandes du firmware déjà installé.</p></details>
         </aside>
       </div>
     </section>
-    <footer class="footer"><span>PHOTO PAINTER STUDIO · <a href="https://github.com/waveshareteam/PhotoPainter" target="_blank" rel="noopener noreferrer">Waveshare original</a> · Apache-2.0</span><span>Export EPD/BMP · 7 couleurs ou N&B · prêt pour <code>/pic</code></span><span id="statusMessage" role="status" aria-live="polite">Prêt</span></footer>
+    <footer class="footer"><span data-i18n-text="{&quot;0&quot;: &quot;PHOTO PAINTER STUDIO ·&quot;, &quot;2&quot;: &quot;· Apache-2.0 ·&quot;}">PHOTO PAINTER STUDIO · <a href="https://github.com/waveshareteam/PhotoPainter" target="_blank" rel="noopener noreferrer" data-i18n-text="{&quot;0&quot;: &quot;Waveshare original&quot;}">Waveshare original</a> · Apache-2.0 · <a href="https://ko-fi.com/maelremrem" target="_blank" rel="noopener noreferrer" data-i18n-text="{&quot;0&quot;: &quot;Soutenir sur Ko-fi&quot;}">Soutenir sur Ko-fi</a></span><span data-i18n-text="{&quot;0&quot;: &quot;Export EPD/BMP · 7 couleurs ou N&amp;B · prêt pour&quot;}">Export EPD/BMP · 7 couleurs ou N&B · prêt pour <code>/pic</code></span><span id="statusMessage" role="status" aria-live="polite" data-i18n-text="{&quot;0&quot;: &quot;Prêt&quot;}">Prêt</span></footer>
   </div>
   <input id="fileInput" type="file" multiple accept="image/jpeg,image/png,image/webp,image/bmp,.jpg,.jpeg,.png,.webp,.bmp" hidden />
-  <dialog id="compareDialog" class="compare-dialog"><div class="dialog-head"><div><span class="eyebrow">COMPARAISON</span><h2>Choisir le rendu</h2></div><button id="closeCompare" class="btn btn-outline small">Fermer ×</button></div><p>Quatre rendus sur la même image. Cliquez sur une vignette pour choisir la méthode.</p><div id="compareGrid" class="compare-grid"></div></dialog>
+  <dialog id="compareDialog" class="compare-dialog"><div class="dialog-head"><div><span class="eyebrow" data-i18n-text="{&quot;0&quot;: &quot;COMPARAISON&quot;}">COMPARAISON</span><h2 data-i18n-text="{&quot;0&quot;: &quot;Choisir le rendu&quot;}">Choisir le rendu</h2></div><button id="closeCompare" class="btn btn-outline small" data-i18n-text="{&quot;0&quot;: &quot;Fermer ×&quot;}">Fermer ×</button></div><p data-i18n-text="{&quot;0&quot;: &quot;Quatre rendus sur la même image. Cliquez sur une vignette pour choisir la méthode.&quot;}">Quatre rendus sur la même image. Cliquez sur une vignette pour choisir la méthode.</p><div id="compareGrid" class="compare-grid"></div></dialog>
   <script type="module" src="./js/app.js"></script>
 </body>
 </html>

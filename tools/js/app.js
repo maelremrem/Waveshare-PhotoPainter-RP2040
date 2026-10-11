@@ -1,3 +1,4 @@
+import {t, initI18n} from './i18n.js';
 import {DEFAULTS, PRESETS, PALETTE_LABELS, ALGORITHMS, MONO_MODES, paletteFor, bmp24, outputSize, sanitizeBaseName} from './engine.js';
 import {makeZip, saveFile} from './zip.js';
 import {encodeEPD} from './epd.js';
@@ -20,8 +21,11 @@ const state={files:[],selected:null,settings:{...DEFAULTS},preset:'natural',prev
 let renderTimeout=null;
 const allowed=/\.(jpe?g|png|webp|bmp)$/i;
 const activeSettings=()=>state.selected?.personalSettings||state.settings;
-const formatSize=n=>n>1048576?(n/1048576).toFixed(1)+' Mo':Math.max(1,Math.round(n/1024))+' Ko';
-function message(text){$('#statusMessage').textContent=text;}
+const formatSize=n=>n>1048576?(n/1048576).toFixed(1)+' '+t('Mo'):Math.max(1,Math.round(n/1024))+' '+t('Ko');
+let statusRender=null,progressSource=null;
+function progressTitle(source){progressSource=source;$('#progressTitle').textContent=t(source);}
+function message(source,params={}){statusRender=()=>t(source,typeof params==='function'?params():params);$('#statusMessage').textContent=statusRender();}
+const errorText=error=>t(error?.message||String(error));
 function storageSave(){try{localStorage.setItem('photopainterStudioSettingsV2',JSON.stringify({settings:state.settings,preset:state.preset}));}catch{}}
 function storageLoad(){try{const raw=JSON.parse(localStorage.getItem('photopainterStudioSettingsV2')||'null');if(raw?.settings){state.settings=validateSettings(raw.settings);state.preset=typeof raw.preset==='string'?raw.preset:'custom';}}catch{}}
 function validateSettings(incoming){const safe={...DEFAULTS};
@@ -68,15 +72,15 @@ function updateModeControls(){
   $('#monoThresholdControl').hidden=!threshold;
   $('#monoHint').hidden=!mono;
   $('#monoHint').textContent=threshold
-    ? 'Image binaire sans tramage : réglez le seuil pour les dessins et les logos.'
-    : 'Les gris sont simulés avec des pixels noirs et blancs ; aucun gris artificiel dans le BMP.';
+    ? t("Image binaire sans tramage : réglez le seuil pour les dessins et les logos.")
+    : t("Les gris sont simulés avec des pixels noirs et blancs ; aucun gris artificiel dans le BMP.");
   const ordered=['bayer4','bayer8','bayer16','noise'].includes(config.algorithm);
   $('[data-range="grainPenalty"]').hidden=!ordered||threshold;
   $('[data-setting="serpentine"]').disabled=threshold||['none','bayer4','bayer8','bayer16','noise'].includes(config.algorithm);
   $('#algorithmSelect').disabled=threshold;
   $('#strength').disabled=threshold;
   $('#compareBtn').disabled=threshold||!state.selected||state.exporting||state.comparing;
-  $('#resultType').textContent=mono?'RÉSULTAT NOIR & BLANC':'RÉSULTAT 7 COULEURS';
+  $('#resultType').textContent=mono?t("RÉSULTAT NOIR & BLANC"):t("RÉSULTAT 7 COULEURS");
   createPalette();
 }
 function updateRangeLabel(input){
@@ -88,9 +92,9 @@ function updateRangeLabel(input){
   const out=document.getElementById(input.id+'Value');if(out)out.textContent=suffix;
 }
 function createPalette(){const root=$('#paletteLegend');root.replaceChildren();
-  const legend=document.createElement('span');legend.className='legend-label';legend.textContent=activeSettings().monoMode==='off'?'PALETTE MATÉRIELLE':'PALETTE N&B';root.append(legend);
+  const legend=document.createElement('span');legend.className='legend-label';legend.textContent=activeSettings().monoMode==='off'?t("PALETTE MATÉRIELLE"):t("PALETTE N&B");root.append(legend);
   paletteFor(activeSettings()).forEach((rgb,i)=>{
-  const el=document.createElement('span');el.className='swatch';el.title=PALETTE_LABELS[i];
+  const el=document.createElement('span');el.className='swatch';el.title=t(PALETTE_LABELS[i]);
   el.style.backgroundColor=`rgb(${rgb.join(',')})`;root.append(el);
 });}
 function setActionState(){const active=!!state.selected;$('#fileCount').textContent=String(state.files.length);
@@ -100,10 +104,10 @@ function setActionState(){const active=!!state.selected;$('#fileCount').textCont
   $('#savePreview').disabled=!state.preview||state.exporting;
 }
 function renderFileList(){const root=$('#fileList');root.replaceChildren();
-  if(!state.files.length){const e=document.createElement('div');e.className='empty-list';e.textContent='Vos images apparaîtront ici.';root.append(e);}
+  if(!state.files.length){const e=document.createElement('div');e.className='empty-list';e.textContent=t("Vos images apparaîtront ici.");root.append(e);}
   state.files.forEach((record,index)=>{
     const btn=document.createElement('button');btn.className='file-item'+(record.id===state.selected?.id?' active':'');
-    btn.setAttribute('aria-label','Sélectionner '+record.file.name);
+    btn.setAttribute('aria-label',t('Sélectionner {name}',{name:record.file.name}));
     const thumb=document.createElement('img');thumb.className='file-thumb';thumb.src=record.url;thumb.alt='';thumb.loading='lazy';
     const meta=document.createElement('span');meta.className='file-meta';
     const title=document.createElement('span');title.className='file-title';title.title=record.file.name;title.textContent=record.file.name;
@@ -121,7 +125,7 @@ function importFiles(list){
     const id=++idSeq,url=URL.createObjectURL(file);state.files.push({id,file,url});
   }
   renderFileList();if(!state.selected)selectFile(state.files[0]);
-  else message(`${files.length} photo(s) ajoutée(s) – ${state.files.length} au total`);
+  else message('{count} photo(s) ajoutée(s) – {total} au total',{count:files.length,total:state.files.length});
 }
 function selectFile(record){
   state.selected=record;state.preview=null;state.revision++;
@@ -145,8 +149,8 @@ async function updatePreview(){
     state.preview={fileId:record.id,image,key:JSON.stringify(settings)};
     $('#resultDimensions').textContent=`${image.width} × ${image.height}`;
     $('#resultEmpty').hidden=true;
-    message(`${record.file.name} · ${MONO_MODES[settings.monoMode]||'7 couleurs'} · ${settings.monoMode==='threshold'?'sans tramage':ALGORITHMS[settings.algorithm]} · prêt`);
-  }catch(err){if(revision===state.revision){$('#resultEmpty').hidden=false;$('#resultEmpty').textContent='Impossible de décoder cette image';message('Erreur : '+err.message);}}
+    message('{name} · {mode} · {algorithm} · prêt',()=>({name:record.file.name,mode:t(MONO_MODES[settings.monoMode]||'7 couleurs'),algorithm:t(settings.monoMode==='threshold'?'sans tramage':ALGORITHMS[settings.algorithm])}));
+  }catch(err){if(revision===state.revision){$('#resultEmpty').hidden=false;$('#resultEmpty').textContent=t("Impossible de décoder cette image");message('Erreur : {error}',()=>({error:errorText(err)}));}}
   finally{if(revision===state.revision){$('#previewLoading').hidden=true;setActionState();}}
 }
 function fileBaseName(record,used,extension){let base=sanitizeBaseName(record.file.name),name=base,n=2;
@@ -157,24 +161,24 @@ function exportFormat(){return $('#exportFormat').value;}
 function imageBytes(image,settings){return exportFormat()==='epd'?encodeEPD(image,settings.orientation):bmp24(image);}
 function downloadImage(record,image,settings){const extension=exportFormat(),bytes=imageBytes(image,settings);
   saveFile(bytes,sanitizeBaseName(record.file.name)+'.'+extension,extension==='epd'?'application/octet-stream':'image/bmp');}
-function updateExportLabels(){const ext=exportFormat().toUpperCase();$('#exportSelected').innerHTML=`Exporter le ${ext} <span aria-hidden="true">↗</span>`;
-  $('#exportFormatHint').textContent=ext==='EPD'?'192 024 octets/image · aucun décodage sur le RP2040':'BMP 24 bits · compatibilité anciennes versions';
+function updateExportLabels(){const ext=exportFormat().toUpperCase();$('#exportSelected').innerHTML=`${t('Exporter le {format}',{format:ext})} <span aria-hidden="true">↗</span>`;
+  $('#exportFormatHint').textContent=ext==='EPD'?t("192 024 octets/image · aucun décodage sur le RP2040"):t("BMP 24 bits · compatibilité anciennes versions");
 }
 async function ensurePreview(record,config){const key=JSON.stringify(config);if(state.preview?.fileId===record.id&&state.preview.key===key)return state.preview.image;return processFile(record.file,config);}
 async function exportSelected(){const record=state.selected;if(!record||state.exporting)return;
   state.exporting=true;setActionState();message('Préparation de l’export…');
-  try{const settings={...activeSettings()};const image=await ensurePreview(record,settings);downloadImage(record,image,settings);message('Image téléchargée : '+sanitizeBaseName(record.file.name)+'.'+exportFormat());}
-  catch(err){message('Export impossible : '+err.message);}finally{state.exporting=false;setActionState();}
+  try{const settings={...activeSettings()};const image=await ensurePreview(record,settings);downloadImage(record,image,settings);message('Image téléchargée : {name}',{name:sanitizeBaseName(record.file.name)+'.'+exportFormat()});}
+  catch(err){message('Export impossible : {error}',()=>({error:errorText(err)}));}finally{state.exporting=false;setActionState();}
 }
 async function exportAll(){if(!state.files.length||state.exporting)return;
   state.exporting=true;setActionState();$('#progressPanel').hidden=false;
   const files=[...state.files],options={...state.settings},names=new Set(),results=[],ext=exportFormat();let failed=0;
   try{
     for(let i=0;i<files.length;i++){
-      const record=files[i];$('#progressTitle').textContent='Préparation des images…';
+      const record=files[i];progressTitle('Préparation des images…');
       $('#progressText').textContent=`${i+1} / ${files.length}`;
       $('#exportProgress').value=100*i/files.length;
-      message(`Conversion ${i+1}/${files.length} — ${record.file.name}`);
+      message('Conversion {current}/{total} — {name}',{current:i+1,total:files.length,name:record.file.name});
       await new Promise(r=>setTimeout(r,0));
       try{const config=record.personalSettings||options;const image=await ensurePreview(record,config);
         results.push({name:'pic/'+fileBaseName(record,names,ext),data:ext==='epd'?encodeEPD(image,config.orientation):bmp24(image)});
@@ -182,10 +186,10 @@ async function exportAll(){if(!state.files.length||state.exporting)return;
     }
     if(!results.length)throw Error('Aucune image convertible');
     if($('#includeFrameConf').checked){results.push({name:'settings.conf',data:new TextEncoder().encode(getFrameConf())});}
-    $('#progressTitle').textContent='Création de l’archive ZIP…';
+    progressTitle('Création de l’archive ZIP…');
     const zip=makeZip(results);saveFile(zip,'PhotoPainter_SD_pic.zip','application/zip');
-    $('#exportProgress').value=100;message(`${files.length-failed} ${ext.toUpperCase()} exportés dans un ZIP${failed?' · '+failed+' erreur(s)':''}`);
-  }catch(err){message('Export impossible : '+err.message);}
+    $('#exportProgress').value=100;message('{count} {format} exportés dans un ZIP{errors}',()=>({count:files.length-failed,format:ext.toUpperCase(),errors:failed?t(' · {count} erreur(s)',{count:failed}):''}));
+  }catch(err){message('Export impossible : {error}',()=>({error:errorText(err)}));}
   finally{state.exporting=false;setActionState();setTimeout(()=>{$('#progressPanel').hidden=true;},1500);}
 }
 function changeSettings(event){const input=event.currentTarget,key=input.dataset.setting;
@@ -211,15 +215,15 @@ async function compare(){if(!state.selected||state.comparing)return;
     for(const name of options){if(!dialog.open)break;
       const item=document.createElement('button');item.className='compare-option busy';item.type='button';
       const canvas=document.createElement('canvas'),title=document.createElement('strong'),subtitle=document.createElement('span');
-      title.textContent=ALGORITHMS[name];subtitle.textContent='Traitement…';item.append(canvas,title,subtitle);grid.append(item);
+      title.textContent=t(ALGORITHMS[name]);title.dataset.algorithm=name;subtitle.textContent=t("Traitement…");item.append(canvas,title,subtitle);grid.append(item);
       try{
         const result=await processFile(selected.file,{...base,algorithm:name});
         canvas.width=result.width;canvas.height=result.height;
         canvas.getContext('2d').putImageData(new ImageData(result.data,result.width,result.height),0,0);
-        subtitle.textContent='Cliquer pour appliquer';item.classList.remove('busy');
+        subtitle.textContent=t("Cliquer pour appliquer");subtitle.dataset.ready="true";item.classList.remove('busy');
         if(name===activeSettings().algorithm)item.classList.add('selected');
         item.onclick=()=>{activeSettings().algorithm=name;state.preset='custom';syncControls();storageSave();state.preview=null;scheduleRender(0);dialog.close();};
-      }catch(err){subtitle.textContent=err.message;item.classList.remove('busy');item.disabled=true;}
+      }catch(err){subtitle.textContent=errorText(err);subtitle.dataset.error=err.message;item.classList.remove('busy');item.disabled=true;}
     }
   }finally{state.comparing=false;setActionState();}
 }
@@ -228,7 +232,7 @@ function clearLibrary(){if(state.exporting)return;for(const record of state.file
   state.files=[];state.selected=null;state.preview=null;state.revision++;
   $('#originalImage').hidden=true;$('#originalImage').removeAttribute('src');
   $('#originalEmpty').hidden=false;$('#resultEmpty').hidden=false;$('#sourceDimensions').textContent='—';
-  $('#selectedFilename').textContent='Importez une image pour commencer';
+  $('#selectedFilename').textContent=t("Importez une image pour commencer");
   $('#resultCanvas').getContext('2d').clearRect(0,0,800,800);
   renderFileList();message('Bibliothèque vidée');
 }
@@ -283,7 +287,7 @@ function wireEvents(){
     const file=e.target.files?.[0];if(!file)return;
     try{const obj=JSON.parse(await file.text());state.settings=validateSettings(obj.settings||obj);
       state.preset='custom';syncControls();storageSave();state.preview=null;scheduleRender(0);message('Réglages importés');}
-    catch(err){message('Réglages invalides : '+err.message);}e.target.value='';
+    catch(err){message('Réglages invalides : {error}',()=>({error:errorText(err)}));}e.target.value='';
   });
   document.addEventListener('keydown',e=>{
     if(e.key==='Escape'&&$('#compareDialog').open)$('#compareDialog').close();
@@ -301,6 +305,16 @@ function switchPage(page){
   $('#tabFirmware').classList.toggle('selected',firmware);
   $('.top-actions').hidden=!studio;
 }
+await initI18n();
+document.addEventListener('languagechange',()=>{
+  syncControls();renderFileList();updateExportLabels();
+  if(statusRender)$('#statusMessage').textContent=statusRender();
+  if(progressSource)$('#progressTitle').textContent=t(progressSource);
+  if(!state.selected)$('#selectedFilename').textContent=t('Importez une image pour commencer');
+  if(state.selected&&!state.preview&&$('#previewLoading').hidden)$('#resultEmpty').textContent=t('Impossible de décoder cette image');
+  for(const title of $$('#compareGrid strong[data-algorithm]'))title.textContent=t(ALGORITHMS[title.dataset.algorithm]);
+  for(const subtitle of $$('#compareGrid button > span'))subtitle.textContent=subtitle.dataset.error?t(subtitle.dataset.error):t(subtitle.dataset.ready?'Cliquer pour appliquer':'Traitement…');
+});
 storageLoad();createPalette();syncControls();wireEvents();renderFileList();startFrameUI();startFirmwareUI();updateExportLabels();
 
 if('serviceWorker' in navigator && location.protocol!=='file:')navigator.serviceWorker.register('./sw.js').catch(()=>{});

@@ -1,3 +1,4 @@
+import {t} from './i18n.js';
 // Local-only settings.conf creator + optional Web Serial command console.
 import {FRAME_DEFAULTS,validateFrame,serializeFrame,parseFrame} from './frame-config.js';
 import {saveFile} from './zip.js';
@@ -5,26 +6,33 @@ const $=s=>document.querySelector(s);
 const $$=s=>[...document.querySelectorAll(s)];
 const STORAGE_KEY='photopainterFrameSettingsV1';
 let current={...FRAME_DEFAULTS};
+let validationRender=null;
+function showValidation(source){validationRender=()=>typeof source==='function'?source():t(source);$('#frameValidation').textContent=validationRender();}
+function translateError(error){
+  const match=error.match(/^([^:]+): (booléen incorrect|nombre manquant|nombre incorrect)$/);
+  return match?t('{key}: {error}',{key:match[1],error:t(match[2])}):t(error);
+}
 try{const x=JSON.parse(localStorage.getItem(STORAGE_KEY)||'null');if(x){const v=validateFrame(x);if(!v.errors.length)current=v.settings;}}catch{}
 function sync(){for(const el of $$('[data-frame-setting]')){const key=el.dataset.frameSetting;el.type==='checkbox'?el.checked=!!current[key]:el.value=String(current[key]);}update();}
 function read(){const data={};for(const el of $$('[data-frame-setting]'))data[el.dataset.frameSetting]=el.type==='checkbox'?el.checked:el.value;
   const {settings,errors}=validateFrame(data);return {settings,errors};}
 function update(){const {settings,errors}=read();
   const output=$('#frameConfText');
-  try{output.value=serializeFrame(settings);}catch{output.value='# Corriger les erreurs ci-dessous avant export';}
-  $('#frameValidation').textContent=errors.length?errors.join(' · '):'Configuration valide · prête pour la racine de la microSD';
+  try{output.value=serializeFrame(settings);}catch{output.value=t('# Corriger les erreurs ci-dessous avant export');}
+  showValidation(errors.length?()=>errors.map(translateError).join(' · '):'Configuration valide · prête pour la racine de la microSD');
   $('#frameValidation').classList.toggle('invalid',!!errors.length);
   $('#frameDownload').disabled=!!errors.length;
   if(!errors.length){current=settings;try{localStorage.setItem(STORAGE_KEY,JSON.stringify(current));}catch{}}
 }
 export function getFrameConf(){return serializeFrame(current);}
 export function startFrameUI(){
+  document.addEventListener('languagechange',()=>{if(validationRender)$('#frameValidation').textContent=validationRender();});
   for(const el of $$('[data-frame-setting]'))el.addEventListener('input',update);
-  $('#frameDownload').addEventListener('click',()=>{try{saveFile(new TextEncoder().encode(getFrameConf()),'settings.conf','text/plain');}catch(e){$('#frameValidation').textContent=e.message;}});
+  $('#frameDownload').addEventListener('click',()=>{try{saveFile(new TextEncoder().encode(getFrameConf()),'settings.conf','text/plain');}catch(e){showValidation(()=>e.message.split(' ; ').map(translateError).join(' ; '));}});
   $('#frameImport').addEventListener('change',async ev=>{
     const file=ev.target.files?.[0];if(!file)return;
     const parsed=parseFrame(await file.text());
-    if(parsed.errors.length){$('#frameValidation').textContent=parsed.errors.join(' · ');ev.target.value='';return;}
+    if(parsed.errors.length){showValidation(()=>parsed.errors.map(translateError).join(' · '));ev.target.value='';return;}
     current=parsed.settings;sync();ev.target.value='';
   });
   $('#frameReset').onclick=()=>{current={...FRAME_DEFAULTS};sync();};
@@ -34,24 +42,27 @@ export function startFrameUI(){
 function initSerial(){
   const connect=$('#serialConnect'),send=$('#serialSend'),cmd=$('#serialCommand'),log=$('#serialLog');
   let port=null,reader=null,writer=null;const enc=new TextEncoder();
-  const append=s=>{log.textContent+=s;log.scrollTop=log.scrollHeight;};
-  if(!('serial' in navigator)){connect.disabled=true;append('Web Serial non disponible. Utilise Chromium/Chrome en HTTPS ou localhost.\n');return;}
-  const sendText=async s=>{if(!writer){append('[USB] Connectez d’abord le cadre.\n');return;}await writer.write(enc.encode(s.trim()+'\n'));};
+  const logEntries=[];
+  const renderLog=()=>{log.textContent=logEntries.map(item=>item.translated?t(item.text):item.text).join('');log.scrollTop=log.scrollHeight;};
+  const append=(text,translated=false)=>{logEntries.push({text,translated});renderLog();};
+  document.addEventListener('languagechange',()=>{renderLog();connect.textContent=t(port?'Déconnecter USB':'Connecter le RP2040');});
+  if(!('serial' in navigator)){connect.disabled=true;append('Web Serial non disponible. Utilise Chromium/Chrome en HTTPS ou localhost.\n',true);return;}
+  const sendText=async s=>{if(!writer){append('[USB] Connectez d’abord le cadre.\n',true);return;}await writer.write(enc.encode(s.trim()+'\n'));};
   connect.onclick=async()=>{
     if(port){
       const previousPort=port;port=null;
       try{await reader?.cancel();}catch{}
       try{writer?.releaseLock();}catch{}writer=null;
       try{await previousPort.close();}catch(e){append('[USB] '+e.message+'\n');}
-      connect.textContent='Connecter le RP2040';send.disabled=true;
-      append('[USB] Déconnecté\n');return;
+      connect.textContent=t("Connecter le RP2040");send.disabled=true;
+      append('[USB] Déconnecté\n',true);return;
     }
     try{
       port=await navigator.serial.requestPort();await port.open({baudRate:115200});
-      writer=port.writable.getWriter();connect.textContent='Déconnecter USB';send.disabled=false;
-      reader=port.readable.getReader();append('[USB] Connecté à 115200 bauds\n');
+      writer=port.writable.getWriter();connect.textContent=t("Déconnecter USB");send.disabled=false;
+      reader=port.readable.getReader();append('[USB] Connecté à 115200 bauds\n',true);
       (async()=>{try{const decoder=new TextDecoder();while(true){const {value,done}=await reader.read();if(done)break;if(value)append(decoder.decode(value,{stream:true}));}}catch(e){append('\n[USB] '+e.message+'\n');}finally{try{reader?.releaseLock();}catch{}reader=null;}})();
-    }catch(e){append('[USB] '+e.message+'\n');if(port){try{await port.close();}catch{}}port=null;connect.textContent='Connecter le RP2040';send.disabled=true;}
+    }catch(e){append('[USB] '+e.message+'\n');if(port){try{await port.close();}catch{}}port=null;connect.textContent=t("Connecter le RP2040");send.disabled=true;}
   };
   send.onclick=async()=>{try{if(cmd.value.trim())await sendText(cmd.value);}catch(e){append(e.message+'\n');}};
   $('#serialStatus').onclick=()=>sendText('STATUS').catch(e=>append(e.message+'\n'));

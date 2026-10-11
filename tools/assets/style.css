@@ -11,6 +11,13 @@
 .footer a{color:#b4b9a1;text-decoration:none}.footer a:hover{text-decoration:underline}
 
 /* Frame configuration page and navigation */
+.topbar{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;flex-shrink:0}
+.page-tabs{justify-self:center;white-space:nowrap}
+.top-actions[hidden]{display:flex!important;visibility:hidden;pointer-events:none}
+.language-control{display:flex;align-items:center;gap:6px;color:#bdcecc;font-size:11px}
+.language-control select{background:#13272b;color:#ecf1eb;border:1px solid #476165;border-radius:8px;padding:7px;min-height:35px}
+@media(max-width:1150px){.topbar{grid-template-columns:minmax(0,1fr) auto;padding:10px 16px;gap:10px}.brand{grid-column:1;grid-row:1}.language-control{grid-column:2;grid-row:1;justify-self:end}.page-tabs{grid-column:1/-1;grid-row:2;justify-self:start}.top-actions{grid-column:1/-1;grid-row:3}.top-actions[hidden]{min-height:37px}}
+@media(max-width:420px){.page-tabs{width:100%;justify-content:space-between}.page-tabs button{white-space:normal;min-width:0}.language-control{gap:3px}.top-actions{gap:6px}.top-actions .btn{padding:9px 10px}}
 [hidden]{display:none!important}
 .page-tabs{display:flex;gap:5px;background:#0f1d22;padding:5px;border-radius:12px;border:1px solid #304a4b}
 .page-tabs button{border:0;border-radius:8px;padding:9px 15px;background:transparent;color:#93acad;font-weight:700;font-size:11px}

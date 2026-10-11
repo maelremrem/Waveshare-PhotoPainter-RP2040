@@ -1,3 +1,4 @@
+import {t, getLanguage} from './i18n.js';
 /** Firmware downloads and BOOTSEL instructions for the RP2040 (F) frame. */
 const $ = selector => document.querySelector(selector);
 const REPO = /^[a-z\d_.-]+\/[a-z\d_.-]+$/i;
@@ -38,17 +39,23 @@ export function latestReleaseAsset(release, repository) {
 
 function showLink(anchor, href, label) {
   anchor.href = href;
-  anchor.textContent = label;
+  bindText(anchor, label);
   anchor.hidden = false;
 }
-function setText(id, value) { $(id).textContent = value; }
+const textBindings = new Map();
+function bindText(element, source) {
+  const render=()=>{element.textContent=typeof source==='function'?source():t(source);};
+  textBindings.set(element,render);render();
+}
+function setText(id, value) { bindText($(id), value); }
 function prettyDate(date) {
   const d = new Date(date);
-  return Number.isFinite(d.getTime()) ? d.toLocaleString('fr-FR', {dateStyle: 'medium', timeStyle: 'short'}) : '—';
+  return Number.isFinite(d.getTime()) ? d.toLocaleString(getLanguage(), {dateStyle: 'medium', timeStyle: 'short'}) : '—';
 }
 
 export function startFirmwareUI() {
   let refreshing = false;
+  document.addEventListener('languagechange',()=>{for(const render of textBindings.values())render();});
   const stableButton = $('#fwStableDownload');
   const devButton = $('#fwDevDownload');
   const releasesLink = $('#fwReleasesLink');
@@ -85,7 +92,7 @@ export function startFirmwareUI() {
         url.searchParams.set('v', build.sha256.slice(0, 16));
         showLink(devButton, url.href, '↓ Télécharger le firmware (main)');
         devButton.download = 'PhotoPainter-RP2040-main.uf2';
-        setText('#fwBuildStatus', `Version ${build.version} · ${prettyDate(build.built_at)} · ${(build.bytes / 1024).toFixed(0)} Kio`);
+        setText('#fwBuildStatus', ()=>t('Version {version} · {date} · {size} Kio',{version:build.version,date:prettyDate(build.built_at),size:(build.bytes/1024).toFixed(0)}));
         setText('#fwBuildCommit', build.commit ? build.commit.slice(0,12) : '—');
         setText('#fwBuildChecksum', build.sha256);
       } else {
@@ -108,7 +115,7 @@ export function startFirmwareUI() {
           setText('#fwReleaseStatus', 'Aucune version stable publiée pour le moment. Le firmware main reste disponible après le premier build.');
           return;
         }
-        if (!response.ok) throw Error(`GitHub API : HTTP ${response.status}`);
+        if (!response.ok) throw Error(`GitHub API: HTTP ${response.status}`);
         const release = await response.json();
         const asset = latestReleaseAsset(release, repo);
         if (!asset) {
@@ -116,9 +123,9 @@ export function startFirmwareUI() {
           return;
         }
         showLink(stableButton, asset.url, '↓ Télécharger le firmware stable');
-        setText('#fwReleaseStatus', `${asset.tag} · ${prettyDate(release.published_at)}${asset.size ? ' · '+(asset.size/1024).toFixed(0)+' Kio' : ''}`);
+        setText('#fwReleaseStatus', ()=>t('{tag} · {date}{size}',{tag:asset.tag,date:prettyDate(release.published_at),size:asset.size?t(' · {size} Kio',{size:(asset.size/1024).toFixed(0)}):''}));
       } catch (error) {
-        setText('#fwReleaseStatus', 'Impossible de consulter les releases (connexion, API GitHub ou dépôt privé). ' + error.message);
+        setText('#fwReleaseStatus', ()=>t('Impossible de consulter les releases (connexion, API GitHub ou dépôt privé). {error}',{error:t(error.message)}));
       }
     } finally {
       refreshing = false;
